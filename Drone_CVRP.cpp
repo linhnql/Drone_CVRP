@@ -3,6 +3,10 @@
 
 using namespace std;
 
+double calculate_distance(pair<int, int> &x, pair<int, int> &y){
+    return sqrt(pow(x.first - y.first, 2) + pow(x.second - y.second, 2));
+}
+
 long load_truck[1000]; // trọng tải của truck
 long load_drone[1000]; // trọng tải của drone
 long time_truck[1000]; // time đã đi của truck
@@ -13,17 +17,48 @@ long flag[1000]; // cờ kiểm soát lượng hàng đã giao đủ chưa
 long n, K, M, speed;
 int d, D;   // time giới hạn d - drone bay 1 vòng, D chung
 int m_truck, m_drone; // trọng tải giới hạn
-int L[1000]; // yêu cầu tối thiểu
-int U[1000]; // yêu cầu tối đa
-int W[1000]; // lợi nhuận
+int low[1000]; // yêu cầu tối thiểu
+int upper[1000]; // yêu cầu tối đa
+int weight[1000]; // lợi nhuận
 
 int x, y; // toạ độ
 double matrix_time[1000][1000]; // toạ độ khách hàng
 
 vector<pair<int, int>> index_customer;
 
-double calculate_distance(pair<int, int> &x, pair<int, int> &y){
-    return sqrt(pow(x.first - y.first, 2) + pow(x.second - y.second, 2));
+void read_test(){
+    string fname;
+    fname = "6.5.1.csv";
+
+    vector<vector<string>> content;
+    vector<string> row;
+    string line, word;
+
+    fstream file (fname, ios::in);
+    if(file.is_open()){
+       while(getline(file, line)){
+            row.clear();
+
+            stringstream str(line);
+
+            while(getline(str, word, ','))
+            row.push_back(word);
+            content.push_back(row);
+            }
+        }
+    else
+        cout<<"Could not open the file\n";
+    
+    n = content.size();
+
+    for(int i=1; i<content.size(); i++){
+        index_customer.push_back(make_pair(stoi(content[i][1]), stoi(content[i][2])));
+        low[i] = stoi(content[i][3]);
+        upper[i] = stoi(content[i][4]);
+        weight[i] = stoi(content[i][5]);
+        cout << low[i] << " " << upper[i] << " " <<  weight[i] ;
+        cout<<"\n";
+    }
 }
 
 int index_satisfied(vector<int> rate){
@@ -43,7 +78,7 @@ int index_satisfied(vector<int> rate){
 int select_customer(int k){
     vector<int> rate;
     for (int i=0; i<n; ++i){
-       rate.push_back((W[i]*(L[i]+U[i])/2) / matrix_time[k][i]);
+       rate.push_back((weight[i]*(low[i]+upper[i])/2) / matrix_time[k][i]);
     }
         
     return index_satisfied(rate);
@@ -60,7 +95,7 @@ int main(){
     }
 
     for(int i=0; i<n; ++i){
-        cin >> L[i] >> U[i];
+        cin >> low[i] >> upper[i];
     }
     
     
@@ -84,7 +119,7 @@ int main(){
 
             int rate = (load_truck[i]/m_truck) / ((D - time_truck) / D)
             if (rate >= 1){
-                int amount = U[i] - delivered[i];
+                int amount = upper[i] - delivered[i];
                 if (amount <= load_truck[i]){
                     load_truck[i] -= amount;
                     delivered[i] += amount;
@@ -93,7 +128,7 @@ int main(){
                     delivered[i] += load_truck[i];
                 }
             } else {
-                int amount = L[i] - delivered[i];
+                int amount = low[i] - delivered[i];
                 if (amount <= load_truck[i]){
                     load_truck[i] -= amount;
                     delivered[i] += amount;
@@ -103,7 +138,7 @@ int main(){
                 }
             }
             
-            if (delivered[i] >= L[i]) flag[i] = 1; 
+            if (delivered[i] >= low[i]) flag[i] = 1; 
         }
     }
     
