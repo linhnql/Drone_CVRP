@@ -22,7 +22,7 @@ int upper[1000]; // yêu cầu tối đa
 int weight[1000]; // lợi nhuận
 
 int x, y; // toạ độ
-double matrix_time[1000][1000]; // toạ độ khách hàng
+vector<vector<double>> matrix_time; // toạ độ khách hàng
 
 vector<pair<int, int>> index_customer;
 
@@ -61,7 +61,7 @@ void read_test(){
     }
 }
 
-int index_satisfied(vector<int> rate){
+int index_satisfied(vector<int> rate, int k){
     // check time 
     // khi lớn nhất mà ko thoả mãn thì xoá nó, tiếp tục lặp tìm
     if (rate.size() == 0) return -1;
@@ -69,7 +69,7 @@ int index_satisfied(vector<int> rate){
     int i = max_element(rate.begin(), rate.end()) - rate.begin();
     if (time_truck[i] + matrix_time[k][i] + matrix_time[i][0] > D){
         matrix_time.erase(matrix_time.begin() + i);
-        index_satisfied(rate);
+        index_satisfied(rate, k);
     }
     
     return max_element(rate.begin(), rate.end()) - rate.begin();
@@ -81,8 +81,7 @@ int select_customer(int k){
        rate.push_back((weight[i]*(low[i]+upper[i])/2) / matrix_time[k][i]);
     }
         
-    return index_satisfied(rate);
-    
+    return index_satisfied(rate, k);
 }
 
 int main(){
@@ -117,7 +116,7 @@ int main(){
             int i = select_customer(k);
             if (i == -1) continue;
 
-            int rate = (load_truck[i]/m_truck) / ((D - time_truck) / D)
+            int rate = (load_truck[i]/m_truck) / ((D - time_truck[i]) / D);
             if (rate >= 1){
                 int amount = upper[i] - delivered[i];
                 if (amount <= load_truck[i]){
