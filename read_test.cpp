@@ -22,9 +22,8 @@ int upper[1000]; // yêu cầu tối đa
 int weight[1000]; // lợi nhuận
 
 int x, y; // toạ độ
-double matrix_time[1000][1000]; // toạ độ khách hàng
-
-vector<pair<int, int>> index_customer;
+vector<pair<int, int>> index_customer;  // toạ độ khách hàng
+vector<vector<double>> matrix_time;     // time giữa các khách hàng
 
 void read_test(){
     string fname;

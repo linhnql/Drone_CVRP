@@ -22,9 +22,9 @@ int upper[1000]; // yêu cầu tối đa
 int weight[1000]; // lợi nhuận
 
 int x, y; // toạ độ
-vector<vector<double>> matrix_time; // toạ độ khách hàng
+vector<pair<int, int>> index_customer;  // toạ độ khách hàng
+vector<vector<double>> matrix_time;     // time giữa các khách hàng
 
-vector<pair<int, int>> index_customer;
 
 void read_test(){
     string fname;
@@ -90,7 +90,7 @@ int main(){
     for (int i=0; i<n; i++)    {
         for (int j=0; j<n; ++j){
             distance = calculate_distance(index_customer[i], index_customer[j]);
-            matrix_time[i][j] = matrix_time[j][i] = distance / speed;
+            matrix_time[i][j] = distance / speed;
             ;
         }
     }
