@@ -84,19 +84,7 @@ int select_customer(int k){
     return index_satisfied(rate, k);
 }
 
-int main(){
-
-    cin >> n;
-    n=5; K=5; M=2; speed=1;
-    for(int i=0; i<n; ++i){
-        cin >> x >> y;
-        index_customer.push_back(make_pair(x, y));
-    }
-
-    for(int i=0; i<n; ++i){
-        cin >> low[i] >> upper[i];
-    }
-    
+int main(){   
     
     double distance;
     for (int i=0; i<n; i++)    {
