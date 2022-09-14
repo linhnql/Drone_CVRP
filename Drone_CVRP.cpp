@@ -1,11 +1,7 @@
-// mới bước 2
 #include <bits/stdc++.h>
+#include <algorithm>
 
 using namespace std;
-
-double calculate_distance(pair<int, int> &x, pair<int, int> &y){
-    return sqrt(pow(x.first - y.first, 2) + pow(x.second - y.second, 2));
-}
 
 long load_truck[1000]; // trọng tải của truck
 long load_drone[1000]; // trọng tải của drone
@@ -28,7 +24,6 @@ vector<pair<double, double>> index_customer;  // toạ độ khách hàng
 vector<vector<double>> matrix_time;     // time giữa các khách hàng
 
 map<int, int> res; // customer - delivered
-
 
 void read_test(){
     string fname;
@@ -65,6 +60,10 @@ void read_test(){
     }
 }
 
+double calculate_distance(pair<double, double> &x, pair<double, double> &y){
+    return sqrt(pow(x.first - y.first, 2) + pow(x.second - y.second, 2));
+}
+
 int index_rate_truck(vector<int> rate, int k){
     // check time 
     // khi lớn nhất mà ko thoả mãn thì xoá nó, tiếp tục lặp tìm
@@ -89,7 +88,7 @@ int select_customer_truck(int k){
 }
 
 
-int index_time_smallest(vector<int> rate, int k, int route){
+int index_time_smallest(vector<double> rate, int k, int route){
     // check time 
     // khi lớn nhất mà ko thoả mãn thì xoá nó, tiếp tục lặp tìm
     if (rate.size() == 0) return -1;
@@ -116,7 +115,7 @@ int index_rate_drone(vector<int> rate, int k, int route){
     if (time_drone[i] + matrix_time[k][i] + matrix_time[i][0] > D 
         || time_drone_n[i][route] + matrix_time[k][i] + matrix_time[i][0] > d){
         matrix_time.erase(matrix_time.begin() + i);
-        index_rate_drone(rate, k);
+        index_rate_drone(rate, k, route);
     }
     
     time_drone[i] = time_drone[i] + matrix_time[k][i];
@@ -127,7 +126,7 @@ int index_rate_drone(vector<int> rate, int k, int route){
 int select_customer_drone(int k, int route){
     vector<int> rate;
     for (int i=0; i<n; ++i){
-       rate.push_back((weight[i]*(upper[i] - delivered[i]) / matrix_time[k][i]);
+       rate.push_back((weight[i]*(upper[i] - delivered[i]) / matrix_time[k][i]));
     }
         
     return index_rate_drone(rate, k, route);
@@ -229,7 +228,9 @@ int main(){
         }
     }
 
-    cout << res;
+    for (const auto& elem : res) {
+        cout << '\t' << elem.first << '\t' << elem.second << '\n';
+    }
 
     return 0;
 }
