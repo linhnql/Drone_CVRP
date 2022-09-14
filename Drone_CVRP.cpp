@@ -9,7 +9,6 @@ long time_truck[1000]; // time đã đi của truck
 long time_drone[1000]; // time đã đi của drone
 long time_drone_n[1000][100]; // time đã đi của drone
 long delivered[1000]; // lượng hàng đã giao cho khách
-// long flag[1000]; // cờ kiểm soát lượng hàng đã giao đủ chưa
 
 long n, K, M, speed;
 int route; // hành trình thứ route của drone
@@ -182,9 +181,7 @@ int main(){
 
     }
     
-    // drone, phải có 1 stucture lưu flag = 0 ? cần flag k nhỉ
-    vector<int> cus_less;
-    // vector<double> temp;
+    // drone giao cho đủ low
     for (int j=0; j<M; j++){
         if (load_drone[j] == 0) route++;
         // tại khách vị trí k
@@ -222,7 +219,6 @@ int main(){
             }
             
             if (delivered[i] >= low[i]) {
-                // flag[i] = 1; 
                 res.insert({i, delivered[i]});
             }
         }
