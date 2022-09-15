@@ -155,13 +155,7 @@ int main(){
         matrix_dist.push_back(temp);
     }
 
-    // for (int i = 0; i < n; i++){
-    //     for (int j = 0; j < n; j++){
-    //         cout << matrix_dist[i][j] << " ";
-    //     }    
-    //     cout << endl;
-    // }
-    
+    // nói chung đang sai ở đây
     // xuất phát từ xe tải j
     for (int j=0; j<K; ++j){
         if (load_truck[j] >= m_truck || time_truck[j] >= work_time) continue;
