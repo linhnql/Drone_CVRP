@@ -9,6 +9,7 @@ double time_truck[100]; // time đã đi của truck
 double time_drone[100]; // time đã đi của drone
 double time_drone_n[100][100]; // time đã đi của drone
 long delivered[100]; // lượng hàng đã giao cho khách
+int flag[100];
 
 long n, K=1, M=1;
 int truck_speed=40, drone_speed=60;
@@ -67,25 +68,28 @@ double calculate_distance(pair<double, double> &x, pair<double, double> &y){
     return sqrt(pow(x.first - y.first, 2) + pow(x.second - y.second, 2));
 }
 
-int index_rate_truck(vector<int> rate, int k){
+int index_rate_truck(vector<double> rate, int k){
     // check time 
     // khi lớn nhất mà ko thoả mãn thì xoá nó, tiếp tục lặp tìm
     if (rate.size() == 0) return -1;
 
     int i = max_element(rate.begin(), rate.end()) - rate.begin();
     double time_to_i = matrix_dist[k][i]/truck_speed;
-    if (time_truck[i] + time_to_i + matrix_dist[i][0]/truck_speed > work_time){
+    if (flag[i] == 1 || time_truck[i] + time_to_i + matrix_dist[i][0]/truck_speed > work_time){
         matrix_dist.erase(matrix_dist.begin() + i);
         index_rate_truck(rate, k);
     }
     time_truck[i] += time_to_i;
+    flag[i] = 1;
     return i;
 }
 
 int select_customer_truck(int k){
-    vector<int> rate;
+    vector<double> rate;
     for (int i=0; i<n; ++i){
-       rate.push_back((weight[i] * (low[i]+upper[i])/2) / matrix_dist[k][i]);
+        if (i == k) rate.push_back(0);
+        else 
+            rate.push_back((weight[i] * (low[i]+upper[i])/2) / matrix_dist[k][i]);
     }
         
     return index_rate_truck(rate, k);
@@ -160,11 +164,12 @@ int main(){
     
     // xuất phát từ xe tải j
     for (int j=0; j<K; ++j){
-        if (load_truck[j] == 0 || time_truck[j] >= work_time) continue;
+        if (load_truck[j] >= m_truck || time_truck[j] >= work_time) continue;
         // tại khách vị trí k
         for (int k=0; k<n; ++k){
             // tìm vị trí i ưu tiên - bước 1
             int i = select_customer_truck(k);
+            cout << "Customer index: "<< i << endl;
             if (i == -1) continue;
 
             // bước 2
@@ -201,7 +206,7 @@ int main(){
     // drone giao cho đủ low, xuất phát từ dron j
     for (int j=0; j<M; ++j){
         if (time_drone[j] >= work_time) continue;
-        if (load_drone[j] == 0 || time_drone_n[j][route] >= drone_duration) route++;
+        if (load_drone[j] >= m_drone || time_drone_n[j][route] >= drone_duration) route++;
         // tại khách vị trí k
         for (int k=0; k<n; ++k){
             int i = index_time_smallest(matrix_dist[k], k, route);
@@ -224,25 +229,29 @@ int main(){
     // xuất phát từ drone j
     for (int j=0; j<M; ++j){
         if (time_drone[j] >= work_time) continue;
-        if (load_drone[j] == 0 || time_drone_n[j][route] >= drone_duration) route++;
+        if (load_drone[j] >= m_drone || time_drone_n[j][route] >= drone_duration) route++;
         // tại khách vị trí k
         for (int k=0; k<n; ++k){
             // tìm vị trí i ưu tiên - bước 1
             int i = select_customer_drone(k, route);
             if (i == -1) continue;
 
-            int amount = upper[i] - delivered[i];
-            if (amount <= load_drone[i]){ // drone thừa hàng nên giao = upper
-                load_drone[i] -= amount;
-                delivered[i] += amount;
+            int excess_amount = upper[i] - delivered[i];
+            if (excess_amount <= load_drone[i]){ // drone thừa hàng nên giao = upper
+                load_drone[i] -= excess_amount;
+                delivered[i] += excess_amount;
+                drone[j][route][i] = excess_amount;
             } else {                      // drone thiếu hàng để = upper nên giao hết, route khác
-                load_drone[i] -= load_drone[i];
-                delivered[i] += load_drone[i];
+                int drone_less = load_drone[i];
+                load_drone[i] -= drone_less;
+                delivered[i] += drone_less;
+                drone[j][route][i] = drone_less;
             }
         }
     }
-
+    
     for (int i=0; i<K; ++i){
+        cout << "Truck: " << i << endl;
         for (int j=0; j<n; ++j){
             cout << truck[i][j] << " ";
         }
@@ -250,8 +259,9 @@ int main(){
     }
 
     for (int i=0; i<M; ++i){
+        cout << "Drone: " << i << endl;
         for (int j=0; j<route; ++j){
-            cout << "Drone hành trình thứ: " << j << "\n";
+            cout << "Route " << j << "\n";
             for (int k=0; k<n; ++k){
                 cout << drone[i][j][k] << " ";
             }
