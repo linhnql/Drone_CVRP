@@ -182,9 +182,9 @@ int main()
     // xuất phát từ xe tải j
     for (int j = 0; j < K; ++j)
     {
-        cout << "J = " << j << "\n";
-        if (load_truck[j] >= m_truck || time_truck[j] >= work_time)
-            continue;
+        cout << "j = " << j << "\n";
+        load_truck[j] = m_truck;
+        
         // khách hàng k
         for (int k = 0; k < n; ++k)
         {
@@ -192,11 +192,10 @@ int main()
             // tìm vị trí i ưu tiên - bước 1
             int idx = select_customer_truck(k, j);
             cout << "Customer index: " << idx << endl;
-            if (idx == -1)
-                continue;
+            if (idx == -1) continue;
 
             // bước 2
-            int rate = (load_truck[idx] / m_truck) / ((work_time - time_truck[idx]) / work_time);
+            int rate = (load_truck[idx] / m_truck) / ((work_time - time_truck[j]) / work_time);
             if (rate >= 1)
             {
                 int amount_full = upper[idx] - delivered[idx];
@@ -211,7 +210,7 @@ int main()
                 {
                     // truck thiếu hàng để = upper nên giao hết còn lại
                     int amount_less = load_truck[idx];
-                    load_truck[idx] -= amount_less;
+                    load_truck[idx] = 0;
                     delivered[idx] += amount_less;
                     truck[j][idx] = amount_less;
                 }
@@ -228,21 +227,21 @@ int main()
                 else
                 {
                     int amount_less = load_truck[idx]; // truck thiếu hàng để >= low nên giao hết còn lại
-                    load_truck[idx] -= amount_less;
+                    load_truck[idx] = 0;
                     delivered[idx] += amount_less;
                     truck[j][idx] = amount_less;
                 }
             }
+            if (time_truck[j] >= work_time) continue;
         }
     }
 
     // drone giao cho đủ low, xuất phát từ dron j
     for (int j = 0; j < M; ++j)
     {
-        if (time_drone[j] >= work_time)
-            continue;
-        if (load_drone[j] >= m_drone || time_drone_n[j][route] >= drone_duration)
-            route++;
+        route = 0;
+        load_drone[j] = m_drone;
+
         // tại khách vị trí k
         for (int k = 0; k < n; ++k)
         {
@@ -260,20 +259,24 @@ int main()
             else
             { // drone thiếu hàng để = low nên giao hết, route khác
                 int drone_less = load_drone[i];
-                load_drone[i] -= drone_less;
+                load_drone[i] = 0;
                 delivered[i] += drone_less;
                 drone[j][route][i] = drone_less;
             }
+
+            if (time_drone[j] >= work_time) break;
+            if (time_drone_n[j][route] >= drone_duration)
+                route++;
         }
     }
 
     // xuất phát từ drone j
     for (int j = 0; j < M; ++j)
     {
+        load_drone[j] = m_drone;
         if (time_drone[j] >= work_time)
             continue;
-        if (load_drone[j] >= m_drone || time_drone_n[j][route] >= drone_duration)
-            route++;
+    
         // tại khách vị trí k
         for (int k = 0; k < n; ++k)
         {
@@ -292,10 +295,13 @@ int main()
             else
             { // drone thiếu hàng để = upper nên giao hết, route khác
                 int drone_less = load_drone[i];
-                load_drone[i] -= drone_less;
+                load_drone[i] = 0;
                 delivered[i] += drone_less;
                 drone[j][route][i] = drone_less;
             }
+            if (time_drone[j] >= work_time) break;
+            if (time_drone_n[j][route] >= drone_duration)
+                route++;
         }
     }
 
