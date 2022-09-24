@@ -50,14 +50,20 @@ void read_test(){
         cout<<"Could not open the file\n";
     
     n = content.size();
+    // thêm depot vị trí (0, 0)
+    index_customer.push_back(make_pair(0, 0));
+    low[0] = 0;
+    upper[0] = 0;
+    weight[0] = 0;
+    // flag[0] = 1;
 
-    for(int i=1; i<n; i++){
+    for (int i = 1; i < n; i++)
+    {
         index_customer.push_back(make_pair(stod(content[i][1]), stod(content[i][2])));
-        low[i-1] = stoi(content[i][3]);
-        upper[i-1] = stoi(content[i][4]);
-        weight[i-1] = stoi(content[i][5]);
+        low[i] = stoi(content[i][3]);
+        upper[i] = stoi(content[i][4]);
+        weight[i] = stoi(content[i][5]);
     }
-    n--;
 }
 
 double calculate_distance(pair<double, double> &x, pair<double, double> &y){
@@ -78,10 +84,10 @@ int main(){
         cout << "\n";
     }
     for (int i = 0; i < n; i++){
-        for (int j = 0; j < n; j++){
-            cout << matrix_dist[i][j] << " ";
-        }    
-        cout << endl;
+        // for (int j = 0; j < n; j++){
+        //     cout << matrix_dist[i][j] << " ";
+        // }    
+        cout << index_customer[i].first << " " << index_customer[i].second << " " << low[i] << " " << upper[i] << " " << weight[i] << endl;
     }
     return 0;
 }

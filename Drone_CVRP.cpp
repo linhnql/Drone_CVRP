@@ -53,7 +53,7 @@ void read_test()
     else
         cout << "Could not open the file\n";
 
-    n = content.size() - 1;
+    n = content.size();
     // thêm depot vị trí (0, 0)
     index_customer.push_back(make_pair(0, 0));
     low[0] = 0;
@@ -67,7 +67,6 @@ void read_test()
         low[i] = stoi(content[i][3]);
         upper[i] = stoi(content[i][4]);
         weight[i] = stoi(content[i][5]);
-        // cout << l
     }
 }
 
@@ -273,9 +272,9 @@ int main()
     // xuất phát từ drone j
     for (int j = 0; j < M; ++j)
     {
-        load_drone[j] = m_drone;
         if (time_drone[j] >= work_time)
             continue;
+        load_drone[j] = m_drone;
     
         // tại khách vị trí k
         for (int k = 0; k < n; ++k)
