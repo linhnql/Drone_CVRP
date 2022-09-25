@@ -90,9 +90,8 @@ int select_customer_truck(int k, int truck_num)
     if (i == 0)
         return -1;
 
-    double time_to_i = matrix_dist[k][i] / truck_speed;
-    double time_i_to_depot =  matrix_dist[i][0] / truck_speed;
-    double total_with_back_dp = time_truck[truck_num] + time_to_i + time_i_to_depot;
+    double time_to_i_and_back_depot = (matrix_dist[k][i] + matrix_dist[i][0]) / truck_speed;
+    double total_with_back_dp = time_truck[truck_num] + time_to_i_and_back_depot;
 
     while (flag[i] == 1 || total_with_back_dp > work_time)
     {
@@ -101,12 +100,12 @@ int select_customer_truck(int k, int truck_num)
             return -1;
 
         i = max_element(rate.begin(), rate.end()) - rate.begin();
-        time_to_i = matrix_dist[k][i] / truck_speed;
-        time_i_to_depot =  matrix_dist[i][0] / truck_speed;
-        total_with_back_dp = time_truck[truck_num] + time_to_i + time_i_to_depot;
+        time_to_i_and_back_depot = (matrix_dist[k][i] + matrix_dist[i][0]) / truck_speed;
+
+        total_with_back_dp = time_truck[truck_num] + time_to_i_and_back_depot;
     }
 
-    time_truck[truck_num] += time_to_i;
+    time_truck[truck_num] += matrix_dist[k][i]/truck_speed;
     flag[i] = 1;
 
     return i;
@@ -120,10 +119,10 @@ int index_time_smallest(vector<double> rate, int k, int route, int drone_num)
         return -1;
 
     int i = min_element(rate.begin(), rate.end()) - rate.begin();
-    double time_to_i = matrix_dist[k][i] / drone_speed;
-    double time_i_to_depot = matrix_dist[i][0] / drone_speed;
-    double total_with_back_dp = time_drone[drone_num] + time_to_i + time_i_to_depot;
-    double route_with_back_dp = time_drone_n[drone_num][route] + time_to_i + time_i_to_depot;
+    double time_to_i_and_back_depot = (matrix_dist[k][i] + matrix_dist[i][0]) / drone_speed;
+    double total_with_back_dp = time_drone[drone_num] + time_to_i_and_back_depot;
+    double route_with_back_dp = time_drone_n[drone_num][route] + time_to_i_and_back_depot;
+
     while (delivered[i] > low[i] || total_with_back_dp > work_time || route_with_back_dp > drone_duration)
     {
         rate.erase(rate.begin() + i);
@@ -131,14 +130,13 @@ int index_time_smallest(vector<double> rate, int k, int route, int drone_num)
             return -1;
 
         i = min_element(rate.begin(), rate.end()) - rate.begin();
-        time_to_i = matrix_dist[k][i] / drone_speed;
-        time_i_to_depot = matrix_dist[i][0] / drone_speed;
-        total_with_back_dp = time_drone[drone_num] + time_to_i + time_i_to_depot;
-        route_with_back_dp = time_drone_n[drone_num][route] + time_to_i + time_i_to_depot;
+        time_to_i_and_back_depot = (matrix_dist[k][i] + matrix_dist[i][0]) / drone_speed;
+        total_with_back_dp = time_drone[drone_num] + time_to_i_and_back_depot;
+        route_with_back_dp = time_drone_n[drone_num][route] + time_to_i_and_back_depot;
     }
 
-    time_drone[drone_num] += time_to_i;
-    time_drone_n[drone_num][route] += time_to_i;
+    time_drone[drone_num] += matrix_dist[k][i]/drone_speed;
+    time_drone_n[drone_num][route] += matrix_dist[k][i]/drone_speed;
     return i;
 }
 
@@ -154,10 +152,10 @@ int select_customer_drone(int k, int route, int drone_num)
         return -1;
 
     int i = max_element(rate.begin(), rate.end()) - rate.begin();
-    double time_to_i = matrix_dist[k][i] / drone_speed;
-    double time_i_to_depot = matrix_dist[i][0] / drone_speed;
-    double total_with_back_dp = time_drone[drone_num] + time_to_i + time_i_to_depot;
-    double route_with_back_dp = time_drone_n[drone_num][route] + time_to_i + time_i_to_depot;
+    double time_to_i_and_back_depot = (matrix_dist[k][i] + matrix_dist[i][0]) / drone_speed;
+    double total_with_back_dp = time_drone[drone_num] + time_to_i_and_back_depot;
+    double route_with_back_dp = time_drone_n[drone_num][route] + time_to_i_and_back_depot;
+
     while (total_with_back_dp > work_time || route_with_back_dp > drone_duration)
     {
         rate.erase(rate.begin() + i);
@@ -165,14 +163,13 @@ int select_customer_drone(int k, int route, int drone_num)
             return -1;
 
         i = max_element(rate.begin(), rate.end()) - rate.begin();
-        time_to_i = matrix_dist[k][i] / drone_speed;
-        time_i_to_depot = matrix_dist[i][0] / drone_speed;
-        total_with_back_dp = time_drone[drone_num] + time_to_i + time_i_to_depot;
-        route_with_back_dp = time_drone_n[drone_num][route] + time_to_i + time_i_to_depot;
+        time_to_i_and_back_depot = (matrix_dist[k][i] + matrix_dist[i][0]) / drone_speed;
+        total_with_back_dp = time_drone[drone_num] + time_to_i_and_back_depot;
+        route_with_back_dp = time_drone_n[drone_num][route] + time_to_i_and_back_depot;
     }
 
-    time_drone[drone_num] += time_to_i;
-    time_drone_n[drone_num][route] += time_to_i;
+    time_drone[drone_num] += matrix_dist[k][i]/drone_speed;
+    time_drone_n[drone_num][route] += matrix_dist[k][i]/drone_speed;
     return i;
 }
 
