@@ -30,7 +30,7 @@ int drone[100][100][100]; // lượng hàng drone i trong hành trình j giao ch
 void read_test()
 {
     string fname;
-    fname = "6.5.1.csv";
+    fname = "6.5.3.csv";
 
     vector<vector<string>> content;
     vector<string> row;
@@ -85,7 +85,9 @@ int select_customer_truck(int k, int truck_num)
         else
             rate.push_back((weight[i] * (low[i] + upper[i]) / 2) / matrix_dist[k][i]);
     }
-
+    // for (auto element : rate) {
+    //     cout << element << " ";
+    // } cout << endl;
     int i = max_element(rate.begin(), rate.end()) - rate.begin();
     if (i == 0)
         return -1;
@@ -96,6 +98,9 @@ int select_customer_truck(int k, int truck_num)
     while (flag[i] == 1 || total_with_back_dp > work_time)
     {
         rate.erase(rate.begin() + i);
+        // for (auto element : rate) {
+        //     cout << element << " ";
+        // }cout << endl;
         if (rate.size() == 0)
             return -1;
 
@@ -193,7 +198,7 @@ int main()
         cout << "j = " << j << "\n";
         load_truck[j] = m_truck;
         
-        // khách hàng k
+        // khách hàng k, bắt đầu từ depot, khách hàng thứ n sẽ hết khách => idx = -1
         for (int k = 0; k < n; ++k)
         {
             cout << "k = " << k << "\n";
