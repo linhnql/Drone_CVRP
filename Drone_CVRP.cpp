@@ -92,9 +92,9 @@ int select_customer_truck(int k, int truck_num)
 
     double time_to_i = matrix_dist[k][i] / truck_speed;
     double time_i_to_depot =  matrix_dist[i][0] / truck_speed;
-    double count_time = time_truck[truck_num] + time_to_i + time_i_to_depot;
+    double total_with_back_dp = time_truck[truck_num] + time_to_i + time_i_to_depot;
 
-    while (flag[i] == 1 || count_time > work_time)
+    while (flag[i] == 1 || total_with_back_dp > work_time)
     {
         rate.erase(rate.begin() + i);
         if (rate.size() == 0)
@@ -103,7 +103,7 @@ int select_customer_truck(int k, int truck_num)
         i = max_element(rate.begin(), rate.end()) - rate.begin();
         time_to_i = matrix_dist[k][i] / truck_speed;
         time_i_to_depot =  matrix_dist[i][0] / truck_speed;
-        count_time = time_truck[truck_num] + time_to_i + time_i_to_depot;
+        total_with_back_dp = time_truck[truck_num] + time_to_i + time_i_to_depot;
     }
 
     time_truck[truck_num] += time_to_i;
@@ -122,9 +122,9 @@ int index_time_smallest(vector<double> rate, int k, int route, int drone_num)
     int i = min_element(rate.begin(), rate.end()) - rate.begin();
     double time_to_i = matrix_dist[k][i] / drone_speed;
     double time_i_to_depot = matrix_dist[i][0] / drone_speed;
-    double total_time_and_back_dp = time_drone[drone_num] + time_to_i + time_i_to_depot;
-    double count_route_time_and_back_dp = time_drone_n[drone_num][route] + time_to_i + time_i_to_depot;
-    while (delivered[i] > low[i] || total_time_and_back_dp > work_time || count_route_time_and_back_dp > drone_duration)
+    double total_with_back_dp = time_drone[drone_num] + time_to_i + time_i_to_depot;
+    double route_with_back_dp = time_drone_n[drone_num][route] + time_to_i + time_i_to_depot;
+    while (delivered[i] > low[i] || total_with_back_dp > work_time || route_with_back_dp > drone_duration)
     {
         rate.erase(rate.begin() + i);
         if (rate.size() == 0)
@@ -133,8 +133,8 @@ int index_time_smallest(vector<double> rate, int k, int route, int drone_num)
         i = min_element(rate.begin(), rate.end()) - rate.begin();
         time_to_i = matrix_dist[k][i] / drone_speed;
         time_i_to_depot = matrix_dist[i][0] / drone_speed;
-        total_time_and_back_dp = time_drone[drone_num] + time_to_i + time_i_to_depot;
-        count_route_time_and_back_dp = time_drone_n[drone_num][route] + time_to_i + time_i_to_depot;
+        total_with_back_dp = time_drone[drone_num] + time_to_i + time_i_to_depot;
+        route_with_back_dp = time_drone_n[drone_num][route] + time_to_i + time_i_to_depot;
     }
 
     time_drone[drone_num] += time_to_i;
@@ -156,9 +156,9 @@ int select_customer_drone(int k, int route, int drone_num)
     int i = max_element(rate.begin(), rate.end()) - rate.begin();
     double time_to_i = matrix_dist[k][i] / drone_speed;
     double time_i_to_depot = matrix_dist[i][0] / drone_speed;
-    double total_time_and_back_dp = time_drone[drone_num] + time_to_i + time_i_to_depot;
-    double count_route_time_and_back_dp = time_drone_n[drone_num][route] + time_to_i + time_i_to_depot;
-    while (total_time_and_back_dp > work_time || count_route_time_and_back_dp > drone_duration)
+    double total_with_back_dp = time_drone[drone_num] + time_to_i + time_i_to_depot;
+    double route_with_back_dp = time_drone_n[drone_num][route] + time_to_i + time_i_to_depot;
+    while (total_with_back_dp > work_time || route_with_back_dp > drone_duration)
     {
         rate.erase(rate.begin() + i);
         if (rate.size() == 0)
@@ -167,8 +167,8 @@ int select_customer_drone(int k, int route, int drone_num)
         i = max_element(rate.begin(), rate.end()) - rate.begin();
         time_to_i = matrix_dist[k][i] / drone_speed;
         time_i_to_depot = matrix_dist[i][0] / drone_speed;
-        total_time_and_back_dp = time_drone[drone_num] + time_to_i + time_i_to_depot;
-        count_route_time_and_back_dp = time_drone_n[drone_num][route] + time_to_i + time_i_to_depot;
+        total_with_back_dp = time_drone[drone_num] + time_to_i + time_i_to_depot;
+        route_with_back_dp = time_drone_n[drone_num][route] + time_to_i + time_i_to_depot;
     }
 
     time_drone[drone_num] += time_to_i;
