@@ -82,19 +82,19 @@ void print_sol()
         cout << "\n";
     }
 
-    for (int i = 0; i < M; ++i)
-    {
-        cout << "Drone: " << i << endl;
-        for (int j = 0; j < route; ++j)
-        {
-            cout << "Route " << j << "\n";
-            for (int k = 0; k < n; ++k)
-            {
-                cout << drone[i][j][k] << " ";
-            }
-            cout << "\n";
-        }
-    }
+    // for (int i = 0; i < M; ++i)
+    // {
+    //     cout << "Drone: " << i << endl;
+    //     for (int j = 0; j < route; ++j)
+    //     {
+    //         cout << "Route " << j << "\n";
+    //         for (int k = 0; k < n; ++k)
+    //         {
+    //             cout << drone[i][j][k] << " ";
+    //         }
+    //         cout << "\n";
+    //     }
+    // }
 }
 
 double calculate_distance(pair<double, double> &x, pair<double, double> &y)
@@ -221,15 +221,16 @@ int select_customer_drone(int k, int route, int drone_num)
 
 void BT_truck(int j, int idx)
 {
-    if (j > K)
+    if (j >= K)
     {
         for (int i = 0; i < n; i++)
             if (!flag[i])
                 return;
         print_sol();
+        return;
     }
     flag[idx] = 1;
-    int rate = (load_truck[idx] / m_truck) / ((work_time - time_truck[j]) / work_time);
+    int rate = (load_truck[j] / m_truck) / ((work_time - time_truck[j]) / work_time);
     if (rate >= 1)
     {
         int amount_full = upper[idx] - delivered[idx];
@@ -275,6 +276,36 @@ void BT_truck(int j, int idx)
             BT_truck(j, rateArr[i].second);
         }
     flag[idx] = 0;
+    if (rate >= 1)
+    {
+        int amount_full = upper[idx] - delivered[idx];
+        if (amount_full <= load_truck[idx])
+        {
+            // truck thừa hàng nên giao = upper
+            load_truck[idx] += amount_full;
+            delivered[idx] -= amount_full;
+        }
+        else
+        {
+            // truck thiếu hàng để = upper nên giao hết còn lại
+            delivered[idx] -= load_truck[idx];;
+        }
+    }
+    else
+    {
+        int amount_qualified = low[idx] - delivered[idx];
+        if (amount_qualified <= load_truck[idx])
+        { // truck đủ hàng để >= low
+            load_truck[idx] += amount_qualified;
+            delivered[idx] -= amount_qualified;
+        }
+        else
+        {
+            // load_truck[idx] = 0;
+            delivered[idx] -= load_truck[idx];
+        }
+    }
+    truck[j][idx] = 0;
     // if (time_truck[j] >= work_time) continue;
 }
 
@@ -292,6 +323,11 @@ int main()
         matrix_dist.push_back(temp);
     }
 
+    for (int i = 0, j = 0; i < M, j < K; ++i, ++j)
+    {
+        load_truck[j] = m_truck;
+        load_drone[i] = m_drone;
+    }
     BT_truck(0, 0);
     // xuất phát từ xe tải j
     // for (int j = 0; j < K; ++j)
@@ -317,13 +353,13 @@ int main()
     for (int j = 0; j < M; ++j)
     {
         route = 0;
-        load_drone[j] = m_drone;
+        // load_drone[j] = m_drone;
 
         // tại khách vị trí k
         for (int k = 0; k < n; ++k)
         {
             int i = index_time_smallest(matrix_dist[k], k, route, j);
-            cout << "dronw customer index: " << i << endl;
+            cout << "drone customer index: " << i << endl;
 
             if (i == -1)
                 continue;
