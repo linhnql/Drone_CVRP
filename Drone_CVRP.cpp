@@ -22,7 +22,7 @@ typedef struct __customer{
     double y;
     int low;
     int upper;
-    int weight;
+    int weight; // lợi nhuận trên 1 đơn vị hàng
     int delivered;
     int flag;
 }__customer;
