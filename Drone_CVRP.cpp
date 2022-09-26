@@ -259,6 +259,8 @@ int main()
         for (int k = 0; k < n; ++k)
         {
             int i = index_time_smallest(matrix_dist[k], k, route, j);
+            cout << "dronw customer index: " << i << endl;
+
             if (i == -1)
                 continue;
 
