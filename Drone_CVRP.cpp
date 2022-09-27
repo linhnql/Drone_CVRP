@@ -246,18 +246,18 @@ void BT_truck(int j, int idx)
     if (rate >= 1)
     {
         int amount_full = customer[idx].upper - customer[idx].delivered;
-        if (amount_full <= truck[idx].load)
+        if (amount_full <= truck[j].load)
         {
             // truck thừa hàng nên giao = upper
-            truck[idx].load -= amount_full;
+            truck[j].load -= amount_full;
             customer[idx].delivered += amount_full;
             truck[j].cus_amount[idx] = amount_full;
         }
         else
         {
             // truck thiếu hàng để = upper nên giao hết còn lại
-            int amount_less = truck[idx].load;
-            truck[idx].load = 0;
+            int amount_less = truck[j].load;
+            truck[j].load = 0;
             customer[idx].delivered += amount_less;
             truck[j].cus_amount[idx] = amount_less;
         }
@@ -265,16 +265,16 @@ void BT_truck(int j, int idx)
     else
     {
         int amount_qualified = customer[idx].low - customer[idx].delivered;
-        if (amount_qualified <= truck[idx].load)
+        if (amount_qualified <= truck[j].load)
         { // truck đủ hàng để >= low
-            truck[idx].load -= amount_qualified;
+            truck[j].load -= amount_qualified;
             customer[idx].delivered += amount_qualified;
             truck[j].cus_amount[idx] = amount_qualified;
         }
         else
         {
-            int amount_less = truck[idx].load; // truck thiếu hàng để >= low nên giao hết còn lại
-            truck[idx].load = 0;
+            int amount_less = truck[j].load; // truck thiếu hàng để >= low nên giao hết còn lại
+            truck[j].load = 0;
             customer[idx].delivered += amount_less;
             truck[j].cus_amount[idx] = amount_less;
         }
@@ -291,30 +291,30 @@ void BT_truck(int j, int idx)
     if (rate >= 1)
     {
         int amount_full = customer[idx].upper - customer[idx].delivered;
-        if (amount_full <= truck[idx].load)
+        if (amount_full <= truck[j].load)
         {
             // truck thừa hàng nên giao = upper
-            truck[idx].load += amount_full;
+            truck[j].load += amount_full;
             customer[idx].delivered -= amount_full;
         }
         else
         {
             // truck thiếu hàng để = upper nên giao hết còn lại
-            customer[idx].delivered -= truck[idx].load;;
+            customer[idx].delivered -= truck[j].load;;
         }
     }
     else
     {
         int amount_qualified = customer[idx].low - customer[idx].delivered;
-        if (amount_qualified <= truck[idx].load)
+        if (amount_qualified <= truck[j].load)
         { // truck đủ hàng để >= low
-            truck[idx].load += amount_qualified;
+            truck[j].load += amount_qualified;
             customer[idx].delivered -= amount_qualified;
         }
         else
         {
-            // truck[idx].load = 0;
-            customer[idx].delivered -= truck[idx].load;
+            // truck[j].load = 0;
+            customer[idx].delivered -= truck[j].load;
         }
     }
     truck[j].cus_amount[idx] = 0;
