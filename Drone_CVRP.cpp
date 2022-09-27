@@ -4,8 +4,8 @@
 using namespace std;
 
 typedef struct __truck{
-    int load;
-    double total_time;
+    int load; // lượng hàng còn lại
+    double total_time; // tổng thời gian đã chạy
     int cus_amount[100]; // lượng hàng truck i giao cho khách j
     // int flag[100];
 }__truck;
@@ -85,8 +85,13 @@ void read_test()
     }
 }
 
-void truck_sol()
+void check_truck_sol()
 {
+    cout << "\n";
+    for (int i = 1; i < n; i++)
+    {
+        if (customer[i].delivered < customer[i].low) return; 
+    }
     for (int i = 0; i < K; ++i)
     {
         cout << "Truck: " << i << endl;
@@ -241,65 +246,86 @@ int select_customer_drone(int k, int route, int num)
     return i;
 }
 
-void BT_truck(int j, int idx, double time)
+void BT_truck(int j, int idx)
 {
+    cout << idx << " ";
+    // nếu tất cả các xe đã đi qua tất cả khách -> check sol
     if (j >= K)
     {
         for (int i = 0; i < n; i++)
             if (!customer[i].truck_flag) // customer[i].truck_flag
                 return;
-        truck_sol();
+        check_truck_sol();
+        return; 
     }
+
     customer[idx].truck_flag = 1;
-    if (time >= work_time) return;
 
     // truck[j].flag[idx] = 1; 
     int rate = (truck[j].load / truck_capacity) / ((work_time - truck[j].total_time) / work_time);
+    int delivered, remain_load;
     if (rate >= 1)
     {
         int amount_full = customer[idx].upper - customer[idx].delivered;
         if (amount_full <= truck[j].load)
         {
+            delivered = remain_load = amount_full; 
             // truck thừa hàng nên giao = upper
-            truck[j].load -= amount_full;
-            customer[idx].delivered += amount_full;
-            truck[j].cus_amount[idx] = amount_full;
+            // truck[j].load -= amount_full;
+            // customer[idx].delivered += amount_full;
+            // truck[j].cus_amount[idx] = amount_full;
         }
         else
         {
+            delivered = truck[j].load;
+            remain_load = 0;
             // truck thiếu hàng để = upper nên giao hết còn lại
-            int amount_less = truck[j].load;
-            truck[j].load = 0;
-            customer[idx].delivered += amount_less;
-            truck[j].cus_amount[idx] = amount_less;
+            // int amount_less = truck[j].load;
+            // truck[j].load = 0;
+            // customer[idx].delivered += amount_less;
+            // truck[j].cus_amount[idx] = amount_less;
         }
     }
     else
     {
         int amount_qualified = customer[idx].low - customer[idx].delivered;
         if (amount_qualified <= truck[j].load)
-        { // truck đủ hàng để >= low
-            truck[j].load -= amount_qualified;
-            customer[idx].delivered += amount_qualified;
-            truck[j].cus_amount[idx] = amount_qualified;
+        { 
+            delivered = remain_load =  amount_qualified;
+            // truck đủ hàng để >= low
+            // truck[j].load -= amount_qualified;
+            // customer[idx].delivered += amount_qualified;
+            // truck[j].cus_amount[idx] = amount_qualified;
         }
         else
         {
-            int amount_less = truck[j].load; // truck thiếu hàng để >= low nên giao hết còn lại
-            truck[j].load = 0;
-            customer[idx].delivered += amount_less;
-            truck[j].cus_amount[idx] = amount_less;
+            delivered = truck[j].load;
+            remain_load = 0;
+            // int amount_less = truck[j].load; // truck thiếu hàng để >= low nên giao hết còn lại
+            // truck[j].load = 0;
+            // customer[idx].delivered += amount_less;
+            // truck[j].cus_amount[idx] = amount_less;
         }
     }
+
+    truck[j].load -= remain_load;
+    customer[idx].delivered += delivered;
+    truck[j].cus_amount[idx] = delivered;
+
     vector<pair<double, int>> rateArr = select_customer_truck(idx, j);
     if (rateArr.size() == 0)
-        BT_truck(j + 1, 0, 0);
+        BT_truck(j + 1, 0);
     else
         for (int i = 0; i < rateArr.size(); i++)
         {
-            BT_truck(j, rateArr[i].second, time + matrix_dist[idx][i]/truck_speed);
+            truck[j].total_time += matrix_dist[idx][i]/truck_speed;
+            BT_truck(j, rateArr[i].second);
+            truck[j].total_time -= matrix_dist[idx][i]/truck_speed;
         }
     customer[idx].truck_flag = 0;
+    truck[j].load += remain_load;
+    customer[idx].delivered -= delivered;
+    truck[j].cus_amount[idx] = 0;
     // truck[j].flag[idx] = 0; 
     // if (rate >= 1)
     // {
@@ -330,8 +356,6 @@ void BT_truck(int j, int idx, double time)
     //         customer[idx].delivered -= truck[j].load;
     //     }
     // }
-    truck[j].cus_amount[idx] = 0;
-    truck[j].total_time -= 1;
 }
 
 int main()
@@ -355,7 +379,7 @@ int main()
         // truck[i].flag[0] = 1;
         // drone[i].flag[0] = 1;
     }
-    BT_truck(0, 0, 0);
+    BT_truck(0, 0);
 
     // drone giao cho đủ low, xuất phát từ dron j
     // customer[1].delivered = 50;
