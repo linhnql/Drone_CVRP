@@ -45,7 +45,7 @@ __customer customer[100];
 void read_test()
 {
     string fname;
-    fname = "6.5.1.csv";
+    fname = "6.5.3.csv";
 
     vector<vector<string>> content;
     vector<string> row;
