@@ -241,7 +241,7 @@ int select_customer_drone(int k, int route, int num)
     return i;
 }
 
-void BT_truck(int j, int idx)
+void BT_truck(int j, int idx, double time)
 {
     if (j >= K)
     {
@@ -251,8 +251,7 @@ void BT_truck(int j, int idx)
         truck_sol();
     }
     customer[idx].truck_flag = 1;
-    truck[j].total_time += 1;
-    if (truck[j].total_time >= work_time) return;
+    if (time >= work_time) return;
 
     // truck[j].flag[idx] = 1; 
     int rate = (truck[j].load / truck_capacity) / ((work_time - truck[j].total_time) / work_time);
@@ -294,43 +293,43 @@ void BT_truck(int j, int idx)
     }
     vector<pair<double, int>> rateArr = select_customer_truck(idx, j);
     if (rateArr.size() == 0)
-        BT_truck(j + 1, 0);
+        BT_truck(j + 1, 0, 0);
     else
         for (int i = 0; i < rateArr.size(); i++)
         {
-            BT_truck(j, rateArr[i].second);
+            BT_truck(j, rateArr[i].second, time + matrix_dist[idx][i]/truck_speed);
         }
     customer[idx].truck_flag = 0;
     // truck[j].flag[idx] = 0; 
-    if (rate >= 1)
-    {
-        int amount_full = customer[idx].upper - customer[idx].delivered;
-        if (amount_full <= truck[j].load)
-        {
-            // truck thừa hàng nên giao = upper
-            truck[j].load += amount_full;
-            customer[idx].delivered -= amount_full;
-        }
-        else
-        {
-            // truck thiếu hàng để = upper nên giao hết còn lại
-            customer[idx].delivered -= truck[j].load;;
-        }
-    }
-    else
-    {
-        int amount_qualified = customer[idx].low - customer[idx].delivered;
-        if (amount_qualified <= truck[j].load)
-        { // truck đủ hàng để >= low
-            truck[j].load += amount_qualified;
-            customer[idx].delivered -= amount_qualified;
-        }
-        else
-        {
-            // truck[j].load = 0;
-            customer[idx].delivered -= truck[j].load;
-        }
-    }
+    // if (rate >= 1)
+    // {
+    //     int amount_full = customer[idx].upper - customer[idx].delivered;
+    //     if (amount_full <= truck[j].load)
+    //     {
+    //         // truck thừa hàng nên giao = upper
+    //         truck[j].load += amount_full;
+    //         customer[idx].delivered -= amount_full;
+    //     }
+    //     else
+    //     {
+    //         // truck thiếu hàng để = upper nên giao hết còn lại
+    //         customer[idx].delivered -= truck[j].load;;
+    //     }
+    // }
+    // else
+    // {
+    //     int amount_qualified = customer[idx].low - customer[idx].delivered;
+    //     if (amount_qualified <= truck[j].load)
+    //     { // truck đủ hàng để >= low
+    //         truck[j].load += amount_qualified;
+    //         customer[idx].delivered -= amount_qualified;
+    //     }
+    //     else
+    //     {
+    //         // truck[j].load = 0;
+    //         customer[idx].delivered -= truck[j].load;
+    //     }
+    // }
     truck[j].cus_amount[idx] = 0;
     truck[j].total_time -= 1;
 }
@@ -356,7 +355,7 @@ int main()
         // truck[i].flag[0] = 1;
         // drone[i].flag[0] = 1;
     }
-    BT_truck(0, 0);
+    BT_truck(0, 0, 0);
 
     // drone giao cho đủ low, xuất phát từ dron j
     // customer[1].delivered = 50;
