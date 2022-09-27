@@ -87,7 +87,7 @@ void print_sol()
     for (int i = 0; i < K; ++i)
     {
         cout << "Truck: " << i << endl;
-        for (int j = 0; j < n; ++j)
+        for (int j = 1; j < n; ++j)
         {
             cout << truck[i].cus_amount[j] << " ";
         }
@@ -288,36 +288,36 @@ void BT_truck(int j, int idx)
             BT_truck(j, rateArr[i].second);
         }
     customer[idx].flag = 0;
-    if (rate >= 1)
-    {
-        int amount_full = customer[idx].upper - customer[idx].delivered;
-        if (amount_full <= truck[j].load)
-        {
-            // truck thừa hàng nên giao = upper
-            truck[j].load += amount_full;
-            customer[idx].delivered -= amount_full;
-        }
-        else
-        {
-            // truck thiếu hàng để = upper nên giao hết còn lại
-            customer[idx].delivered -= truck[j].load;;
-        }
-    }
-    else
-    {
-        int amount_qualified = customer[idx].low - customer[idx].delivered;
-        if (amount_qualified <= truck[j].load)
-        { // truck đủ hàng để >= low
-            truck[j].load += amount_qualified;
-            customer[idx].delivered -= amount_qualified;
-        }
-        else
-        {
-            // truck[j].load = 0;
-            customer[idx].delivered -= truck[j].load;
-        }
-    }
-    truck[j].cus_amount[idx] = 0;
+    // if (rate >= 1)
+    // {
+    //     int amount_full = customer[idx].upper - customer[idx].delivered;
+    //     if (amount_full <= truck[j].load)
+    //     {
+    //         // truck thừa hàng nên giao = upper
+    //         truck[j].load += amount_full;
+    //         customer[idx].delivered -= amount_full;
+    //     }
+    //     else
+    //     {
+    //         // truck thiếu hàng để = upper nên giao hết còn lại
+    //         customer[idx].delivered -= truck[j].load;;
+    //     }
+    // }
+    // else
+    // {
+    //     int amount_qualified = customer[idx].low - customer[idx].delivered;
+    //     if (amount_qualified <= truck[j].load)
+    //     { // truck đủ hàng để >= low
+    //         truck[j].load += amount_qualified;
+    //         customer[idx].delivered -= amount_qualified;
+    //     }
+    //     else
+    //     {
+    //         // truck[j].load = 0;
+    //         customer[idx].delivered -= truck[j].load;
+    //     }
+    // }
+    // truck[j].cus_amount[idx] = 0;
     // if (truck[j].time >= work_time) continue;
 }
 
