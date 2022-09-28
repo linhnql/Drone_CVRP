@@ -258,8 +258,10 @@ void BT_truck(int j, int idx)
     // truck[j].flag[idx] = 1; 
     
     int rate = (truck[j].load / truck_capacity) / ((work_time - truck[j].total_time) / work_time);
-    int delivered;
-    if (rate >= 1)
+
+    int amount = rate < 1 ? customer[idx].low - customer[idx].delivere : customer[idx].upper - customer[idx].delivered;
+    int delivered = amount > truck[j].load ? truck[j].load : amount;
+    /*if (rate >= 1)
     {
         int amount_full = customer[idx].upper - customer[idx].delivered;
         delivered =  amount_full > truck[j].load ? truck[j].load : amount_full;
@@ -268,7 +270,7 @@ void BT_truck(int j, int idx)
     {
         int amount_qualified = customer[idx].low - customer[idx].delivered;
         delivered = amount_qualified > truck[j].load ? truck[j].load : amount_qualified;
-    }
+    }*/
 
     truck[j].load -= delivered;
     customer[idx].delivered += delivered;
