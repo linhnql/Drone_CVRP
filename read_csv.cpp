@@ -63,21 +63,27 @@ void read_test(string file_name){
     cout << content[1][1];
     for (int i = 1; i < n; i++)
     {
+        istringstream iss(content[i][1]);
+        string num_cus;
+        getline(iss, num_cus, '.');
+        string num_truck = content[i][3].length() == 0 ? num_cus : content[i][3];
+        string num_drone = content[i][4].length() == 0 ? num_cus : content[i][4];
+        string work_time = content[i][5].length() == 0 ? to_string(INT_MAX) : content[i][5];
         string str = content[i][1];
         __fields fields;
-        // fields.K = stoi(content[i][3]);
-        // fields.M = stoi(content[i][4]);
-        // fields.work_time = stoi(content[i][5]);
-        // fields.truck_capacity = stoi(content[i][6]);
-        // fields.drone_capacity = stoi(content[i][7]);
-        // fields.drone_speed = stoi(content[i][8]);
-        // fields.truck_speed = stoi(content[i][9]);
-        // fields.drone_duration = stoi(content[i][10]);
-        // params.insert(make_pair(str, fields));
-        cout << content[i][3] << " " << content[i][4] <<" " << content[i][5] <<" " 
-        << content[i][6] <<" "<<content[i][7]<<" "<<content[i][8]<<" "<<content[i][9]<< " " <<content[i][10] << " ";
-        if (content[i][3].length() >  1) cout << content[i][3][1];
-        cout <<endl;
+        fields.K = stoi(num_truck);
+        fields.M = stoi(num_drone);
+        fields.work_time = stoi(work_time);
+        fields.truck_capacity = stoi(content[i][6]);
+        fields.drone_capacity = stoi(content[i][7]);
+        fields.drone_speed = stoi(content[i][8]);
+        fields.truck_speed = stoi(content[i][9]);
+        fields.drone_duration = stoi(content[i][10]);
+        params.insert(make_pair(str, fields));
+        // cout << a << " " << b <<" " << c <<" " 
+        // << content[i][6] <<" "<<content[i][7]<<" "<<content[i][8]<<" "<<content[i][9]<< " " <<content[i][10] << " ";
+        // if (content[i][3].length() >  1) cout << content[i][3][1];
+        // cout <<endl;
     }
 }
 
