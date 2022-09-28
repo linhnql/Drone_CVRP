@@ -1,0 +1,31 @@
+for (int k = 0; k < n; ++k)
+{
+    if (customer[k].truck_flag) continue;
+    int i = index_time_smallest(matrix_dist[k], k, drone[j].route, j);
+
+    if (i == -1)
+        continue;
+
+    int excess_amount = customer[i].low - customer[i].delivered;
+    if (excess_amount <= drone[j].load)
+    { // drone thừa hàng nên giao = low
+        drone[j].load -= excess_amount;
+        customer[i].delivered += excess_amount;
+        drone[j].cus_amount[drone[j].route][i] = excess_amount;
+    }
+    else
+    { // drone thiếu hàng để = low nên giao hết, drone[j].route khác
+        int drone_less = drone[j].load;
+        drone[j].load = 0;
+        customer[i].delivered += drone_less;
+        drone[j].cus_amount[drone[j].route][i] = drone_less;
+    }
+
+    if (drone[j].total_time >= work_time)
+        break;
+    if (drone[j].route_time[drone[j].route] >= drone_duration)
+    {
+        drone[j].route++;
+        drone[j].load = drone_capacity;
+    }
+}
