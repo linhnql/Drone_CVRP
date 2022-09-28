@@ -259,7 +259,7 @@ void BT_truck(int j, int idx)
     
     int rate = (truck[j].load / truck_capacity) / ((work_time - truck[j].total_time) / work_time);
 
-    int amount = rate < 1 ? customer[idx].low - customer[idx].delivere : customer[idx].upper - customer[idx].delivered;
+    int amount = (rate < 1 ? customer[idx].low : customer[idx].upper) - customer[idx].delivered;
     int delivered = amount > truck[j].load ? truck[j].load : amount;
     /*if (rate >= 1)
     {
