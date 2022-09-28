@@ -26,9 +26,19 @@ vector<vector<double>> matrix_dist(n, vector<double>(n));     // time giữa cá
 int truck[100][100]; // lượng hàng truck i giao cho khách j
 int drone[100][100][100]; // lượng hàng drone i trong hành trình j giao cho khách k
 
-void read_test(){
-    string fname;
-    fname = "6.5.1.csv";
+vector<vector<string>> param;
+typedef struct __fields{
+    int K; // number_truck
+    int M; // number_drone
+    int truck_speed, drone_speed;
+    int drone_duration, work_time; // time giới hạn d - drone bay 1 vòng, D chung
+    int truck_capacity, drone_capacity;  
+}__fields;
+map<string, __fields> params;  
+
+void read_test(string file_name){
+    string fname = "./test/";
+    fname += file_name;
 
     vector<vector<string>> content;
     vector<string> row;
@@ -50,44 +60,49 @@ void read_test(){
         cout<<"Could not open the file\n";
     
     n = content.size();
-    // thêm depot vị trí (0, 0)
-    index_customer.push_back(make_pair(0, 0));
-    low[0] = 0;
-    upper[0] = 0;
-    weight[0] = 0;
-    // flag[0] = 1;
-
+    cout << content[1][1];
     for (int i = 1; i < n; i++)
     {
-        index_customer.push_back(make_pair(stod(content[i][1]), stod(content[i][2])));
-        low[i] = stoi(content[i][3]);
-        upper[i] = stoi(content[i][4]);
-        weight[i] = stoi(content[i][5]);
+        string str = content[i][1];
+        __fields fields;
+        // fields.K = stoi(content[i][3]);
+        // fields.M = stoi(content[i][4]);
+        // fields.work_time = stoi(content[i][5]);
+        // fields.truck_capacity = stoi(content[i][6]);
+        // fields.drone_capacity = stoi(content[i][7]);
+        // fields.drone_speed = stoi(content[i][8]);
+        // fields.truck_speed = stoi(content[i][9]);
+        // fields.drone_duration = stoi(content[i][10]);
+        // params.insert(make_pair(str, fields));
+        cout << content[i][3] << " " << content[i][4] <<" " << content[i][5] <<" " 
+        << content[i][6] <<" "<<content[i][7]<<" "<<content[i][8]<<" "<<content[i][9]<< " " <<content[i][10] << " ";
+        if (content[i][3].length() >  1) cout << content[i][3][1];
+        cout <<endl;
     }
-}
-
-double calculate_distance(pair<double, double> &x, pair<double, double> &y){
-    return sqrt(pow(x.first - y.first, 2) + pow(x.second - y.second, 2));
 }
 
 int main(){   
-    read_test();
+    read_test("param.csv");
 
     // matrix_dist.resize(n);
-    for (int i=0; i<n; ++i)    {
-        vector<double> temp;
-        for (int j=0; j<n; ++j){
-            temp.push_back(calculate_distance(index_customer[i], index_customer[j]));
-            // cout << "matrix_dist[i][j]" << " ";
-        }
-        matrix_dist.push_back(temp);
-        cout << "\n";
-    }
-    for (int i = 0; i < n; i++){
-        // for (int j = 0; j < n; j++){
-        //     cout << matrix_dist[i][j] << " ";
-        // }    
-        cout << index_customer[i].first << " " << index_customer[i].second << " " << low[i] << " " << upper[i] << " " << weight[i] << endl;
-    }
+    // for (int i=0; i<n; ++i)    {
+    //     vector<double> temp;
+    //     for (int j=0; j<n; ++j){
+    //         temp.push_back(calculate_distance(index_customer[i], index_customer[j]));
+    //         // cout << "matrix_dist[i][j]" << " ";
+    //     }
+    //     matrix_dist.push_back(temp);
+    //     cout << "\n";
+    // }
+    // for (int i = 0; i < n; i++){
+    //     // for (int j = 0; j < n; j++){
+    //     //     cout << matrix_dist[i][j] << " ";
+    //     // }    
+    //     cout << index_customer[i].first << " " << index_customer[i].second << " " << low[i] << " " << upper[i] << " " << weight[i] << endl;
+    // }
+    // for(auto it = params.cbegin(); it != params.cend(); ++it)    {
+    //     std::cout << it->first << "\n";
+    // }
+
     return 0;
 }

@@ -31,7 +31,7 @@ typedef struct __customer{
     int drone_flag;
 }__customer;
 
-long n, K = 1, M = 1;
+int n, K = 1, M = 1;
 int truck_speed = 40, drone_speed = 60;
 int drone_duration = 30, work_time = 30; // time giới hạn d - drone bay 1 vòng, D chung
 int truck_capacity = 1500, drone_capacity = 40;        // trọng tải giới hạn     
@@ -43,10 +43,10 @@ __truck truck[100];
 __drone drone[100]; 
 __customer customer[100];
 
-void read_test()
+void read_test(string file_name)
 {
-    string fname;
-    fname = "6.5.3.csv";
+    string fname = "./test/";
+    fname += file_name;
 
     vector<vector<string>> content;
     vector<string> row;
@@ -294,53 +294,65 @@ void BT_truck(int j, int idx)
 
 void BT_drone(int j, int idx)
 {
-    cout << idx << " ";
-    // nếu tất cả các drone đã đi qua tất cả khách -> check sol
-    if (j >= M)
-    {
-        check_drone_sol();
-        return; 
-    }
+    // cout << idx << " ";
+    // // nếu tất cả các drone đã đi qua tất cả khách -> check sol
+    // if (j >= M)
+    // {
+    //     check_drone_sol();
+    //     return; 
+    // }
 
-    customer[idx].drone_flag = 1;
-    // truck[j].flag[idx] = 1; 
+    // customer[idx].drone_flag = 1;
+    // // truck[j].flag[idx] = 1; 
     
-    int rate = (drone[j].load / drone_capacity) / ((work_time - drone[j].total_time) / work_time);
-    int delivered;
-    if (rate >= 1)
-    {
-        int amount_full = customer[idx].upper - customer[idx].delivered;
-        delivered =  amount_full > drone[j].load ? drone[j].load : amount_full;
-    }
-    else
-    {
-        int amount_qualified = customer[idx].low - customer[idx].delivered;
-        delivered = amount_qualified > drone[j].load ? drone[j].load : amount_qualified;
-    }
+    // int rate = (drone[j].load / drone_capacity) / ((work_time - drone[j].total_time) / work_time);
+    // int delivered;
+    // if (rate >= 1)
+    // {
+    //     int amount_full = customer[idx].upper - customer[idx].delivered;
+    //     delivered =  amount_full > drone[j].load ? drone[j].load : amount_full;
+    // }
+    // else
+    // {
+    //     int amount_qualified = customer[idx].low - customer[idx].delivered;
+    //     delivered = amount_qualified > drone[j].load ? drone[j].load : amount_qualified;
+    // }
 
-    drone[j].load -= delivered;
-    customer[idx].delivered += delivered;
-    drone[j].cus_amount[idx] = delivered;
+    // drone[j].load -= delivered;
+    // customer[idx].delivered += delivered;
+    // drone[j].cus_amount[idx] = delivered;
 
-    vector<pair<double, int>> rateArr = select_customer_drone(idx, j);
-    if (rateArr.size() == 0)
-        BT_drone(j + 1, 0);
-    else
-        for (int i = 0; i < rateArr.size(); i++)
-        {
-            drone[j].total_time += matrix_dist[idx][i]/drone_speed;
-            BT_drone(j, rateArr[i].second);
-            drone[j].total_time -= matrix_dist[idx][i]/drone_speed;
-        }
-    customer[idx].drone_flag = 0;
-    drone[j].load += delivered;
-    customer[idx].delivered -= delivered;
-    drone[j].cus_amount[idx] = 0;
+    // vector<pair<double, int>> rateArr = select_customer_drone(idx, j);
+    // if (rateArr.size() == 0)
+    //     BT_drone(j + 1, 0);
+    // else
+    //     for (int i = 0; i < rateArr.size(); i++)
+    //     {
+    //         drone[j].total_time += matrix_dist[idx][i]/drone_speed;
+    //         BT_drone(j, rateArr[i].second);
+    //         drone[j].total_time -= matrix_dist[idx][i]/drone_speed;
+    //     }
+    // customer[idx].drone_flag = 0;
+    // drone[j].load += delivered;
+    // customer[idx].delivered -= delivered;
+    // drone[j].cus_amount[idx] = 0;
 }
 
 int main()
 {
-    read_test();
+    // int num_cus[5] = {6, 10, 12, 20, 50};
+    // int area[5] = {5, 10, 20, 30, 40};
+    // string str;
+    // for (auto cus: num_cus){
+    //     for (int i = cus < 50 ? 0 : 1; i < (cus < 50 ? 3 : 5); ++ i){
+    //         for (int j = 1; j < 5; ++j){
+    //             str = to_string(cus) + "." + to_string(area[i]) + "." + to_string(j) + ".csv";
+    //             read_test(str);
+    //             ....
+    //         } 
+    //     }
+    // }
+    read_test("6.5.3.csv");
 
     for (int i = 0; i < n; ++i)
     {
