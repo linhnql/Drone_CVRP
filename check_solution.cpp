@@ -104,6 +104,111 @@ vector<int> get_route(string line, int &start_load, int &cnt){
     return drone_trip;
 }
 
+void check_truck(string line){
+    std::istringstream iss(line);
+    int start_load;
+    int n, cnt = 0;
+    std::vector<int> truck_trip;
+
+    while (iss >> n){
+        cnt++;
+        if (n == -1) start_load = cnt;
+        truck_trip.push_back(n);
+    }
+    
+    set<int> check_flag;
+    check_flag.insert(truck_trip[0]);
+    double working_time = matrix_dist[0][truck_trip[0]];
+    int count_cus = start_load - 1;
+    for (int j = 1; j < count_cus; ++ j){
+        check_flag.insert(truck_trip[j]);
+        working_time += matrix_dist[truck_trip[j-1]][truck_trip[j]];
+    }
+    cout << "working_time: " << working_time << endl;
+    if (check_flag.size() < count_cus) 
+        cout << "Xe tai tham khach hon 1 lan" << endl;
+    if (working_time > limited_time) 
+        cout << "Xe tai vi pham thoi gian" << endl;
+
+    int load_truck = 0;
+    for (int j = start_load; j < cnt; ++j){
+        load_truck += truck_trip[j];
+        customer[truck_trip[j-start_load]].delivered += truck_trip[j];
+    }
+    cout << "load_truck: " << load_truck << endl;
+    if (load_truck > truck_capacity) 
+        cout << "Xe tai vi pham trong tai" << endl;
+ 
+}
+
+double check_drone_router(string line, int router){
+    int start_router = 0, cnt = 0; 
+    vector<int> drone_trip = get_route(line, start_router, cnt);
+            
+    set<int> check_flag;
+    check_flag.insert(drone_trip[0]);
+    double router_time = matrix_dist[0][drone_trip[0]];
+    int count_cus = start_router - 1;
+    for (int j = 1; j < count_cus; ++ j){
+        check_flag.insert(drone_trip[j]);
+        router_time += matrix_dist[drone_trip[j-1]][drone_trip[j]];
+    }
+    cout << "router_time: " << router_time << endl;
+    if (check_flag.size() < count_cus) 
+        cout << "Drone tham khac hon 1 lan trong router thu "<< router << endl;
+    if (router_time > drone_duration) 
+        cout << "Drone vi pham thoi gian bay trong 1 hanh trinh o router thu " << router << endl;
+
+    int load_drone = 0;
+    for (int j = start_router; j < cnt; ++j){
+        load_drone += drone_trip[j];
+        customer[drone_trip[j-start_router]].delivered += drone_trip[j];
+    }
+    cout <<"load_drone: " << load_drone << endl;
+    if (load_drone > drone_capacity) 
+        cout << "Drone vi pham trong tai trong router thu "<< router << endl;     
+
+    return router_time;
+}
+
+void check_solution(string file_name){
+    std::ifstream file(file_name, std::ios_base::in);
+    int result ;
+    file >> result ; 
+    file >> K; 
+    vector<string> lines;
+    string line;
+    getline(file, line);
+
+    // check truck
+    for (int i = 0; i < K; ++i){
+        getline(file, line);
+        check_truck(line);
+    } 
+    
+    // check drone
+    file >> M; 
+    cout << M <<endl; 
+    getline(file, line);
+    int num_drone;
+    file >> num_drone; 
+    getline(file, line);
+    for (int i = 0; i < M; ++i){
+        cout << i << endl;
+
+        vector<int> drone_trip;
+        int router = 0;
+        double total_time = 0;
+        while (getline(file, line) && line.length() > 1) { 
+            router++;
+            double router_time = check_drone_router(line, router);
+            total_time += router_time;
+        }
+        cout << "total_time: " << total_time << endl;
+        if (total_time > limited_time) cout << "Drone vi phạm thời gian tổng";
+    }
+}
+
 int main(){
     
     read_test("6.5.3.csv");
@@ -118,75 +223,6 @@ int main(){
         matrix_dist.push_back(temp);
     }
 
-    std::ifstream file("fake_solu.txt", std::ios_base::in);
-
-    int result ;
-    file >> result ; 
-    // cout << result  <<endl;
-    file >> K; 
-    // cout << K <<endl;
-    
-    // while (file >> a)
-    // {
-    //     cout << a << " ";
-    // }
-    vector<string> lines;
-    string line;
-    int start_load;
-    getline(file, line);
-    // check truck
-    for (int i = 0; i < K; ++i){
-        getline(file, line);
-    //     std::istringstream iss(line);
-    //     int n, cnt = 0;
-    //     std::vector<int> truck_trip;
-
-    //     while (iss >> n){
-    //         cnt++;
-    //         if (n == -1) start_load = cnt;
-    //         truck_trip.push_back(n);
-    //     }
-        
-    //     set<int> check_flag;
-    //     check_flag.insert(truck_trip[0]);
-    //     double working_time = matrix_dist[0][truck_trip[0]];
-    //     int count_cus = start_load - 1;
-    //     for (int j = 1; j < count_cus; ++ j){
-    //         check_flag.insert(truck_trip[j]);
-    //         working_time += matrix_dist[truck_trip[j-1]][truck_trip[j]];
-    //     }
-    //     if (check_flag.size() < count_cus) cout << "Vi pham flag ";
-    //     if (working_time > limited_time) cout << "Vi pham time";
-
-    //     int load_truck = 0;
-    //     for (int j = start_load; j < cnt; ++j){
-    //         load_truck += truck_trip[j];
-    //         customer[truck_trip[j-start_load]].delivered += truck_trip[j];
-    //     }
-    //     if (load_truck > truck_capacity) cout << "Vi pham load";
-    } 
-    
-    // check drone
-    file >> M; 
-    cout << M <<endl;
-    int start_route = 0, cnt = 0;
-    getline(file, line);
-    for (int i = 0; i < M; ++i){
-        int num_drone;
-        file >> num_drone; 
-        getline(file, line);
-        cout << "num_dron: " << num_drone << endl;
-
-        getline(file, line); 
-        vector<int> drone_trip;
-        while (line.length() > 1) {
-            drone_trip = get_route(line, start_route, cnt);
-            for (auto ele: drone_trip) cout << ele << " ";  cout <<endl;
-            // cout << endl << cnt << " " << start_route << endl;
-            getline(file, line); 
-        }
-        getline(file, line);
-    }
-    
+    check_solution("fake_solu.txt");
     return 0;
 }
