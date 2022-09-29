@@ -43,6 +43,11 @@ truck__ truck[100];
 drone__ drone[100]; 
 customer__ customer[100];
 
+double calculate_distance(pair<double, double> &x, pair<double, double> &y)
+{
+    return sqrt(pow(x.first - y.first, 2) + pow(x.second - y.second, 2));
+}
+
 void read_test(string file_name)
 {
     string fname = "./test/";
@@ -84,11 +89,16 @@ void read_test(string file_name)
         customer[i].upper = stoi(content[i][4]);
         customer[i].weight = stoi(content[i][5]);
     }
-}
 
-double calculate_distance(pair<double, double> &x, pair<double, double> &y)
-{
-    return sqrt(pow(x.first - y.first, 2) + pow(x.second - y.second, 2));
+    for (int i = 0; i < n; ++i)
+    {
+        vector<double> temp;
+        for (int j = 0; j < n; ++j)
+        {
+            temp.push_back(calculate_distance(index_customer[i], index_customer[j]));
+        }
+        matrix_dist.push_back(temp);
+    }
 }
 
 vector<int> get_route(string line, int &start_load, int &cnt){
@@ -212,17 +222,7 @@ void check_solution(string file_name){
 int main(){
     
     read_test("6.5.3.csv");
-
-    for (int i = 0; i < n; ++i)
-    {
-        vector<double> temp;
-        for (int j = 0; j < n; ++j)
-        {
-            temp.push_back(calculate_distance(index_customer[i], index_customer[j]));
-        }
-        matrix_dist.push_back(temp);
-    }
-
     check_solution("fake_solu.txt");
+
     return 0;
 }
