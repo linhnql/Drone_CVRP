@@ -59,14 +59,12 @@ double calculate_distance(pair<double, double> &x, pair<double, double> &y){
 }
 
 void read_test(string file_name){
-    string fname = "./test/";
-    fname += file_name;
-
+    file_name = "./test/" + file_name;
+    fstream file(file_name, ios::in);
     vector<vector<string>> content;
     vector<string> row;
     string line, word;
 
-    fstream file(fname, ios::in);
     if (file.is_open()){
         while (getline(file, line)){
             row.clear();
@@ -106,14 +104,12 @@ void read_test(string file_name){
 }
 
 void read_param(string file_name){
-    string fname = "./test/";
-    fname += file_name;
-
+    file_name = "./test/" + file_name;
+    fstream file (file_name, ios::in);
     vector<vector<string>> content;
     vector<string> row;
     string line, word;
 
-    fstream file (fname, ios::in);
     if(file.is_open()){
        while(getline(file, line)){
             row.clear();
@@ -254,6 +250,7 @@ void check_customer(){
 }
 
 void check_solution(string file_name){
+    file_name = "./solution/" + file_name;
     std::ifstream file(file_name, std::ios_base::in);
     vector<string> lines;
     string line;
@@ -295,7 +292,7 @@ void check_solution(string file_name){
 }
 
 int main(){
-    // loop read file
+    // loop check file
     // int not_feasible;
     // int num_cus[5] = {6, 10, 12, 20, 50};
     // int area[5] = {5, 10, 20, 30, 40};
@@ -306,6 +303,17 @@ int main(){
     //         for (int j = 1; j < 5; ++j){
     //             str = to_string(cus) + "." + to_string(area[i]) + "." + to_string(j);
     //             read_test(str + ".csv");
+
+    //             read_param("params.csv");
+    //             K = params[test].K;
+    //             M = params[test].M;
+    //             truck_speed = params[test].truck_speed;
+    //             drone_speed = params[test].drone_speed;
+    //             drone_duration = params[test].drone_duration;
+    //             limited_time = params[test].limited_time;
+    //             truck_capacity = params[test].truck_capacity;
+    //             drone_capacity = params[test].drone_capacity;
+
     //             check_solution(str + ".txt");
     //             if (flag) not_feasible++;
     //             else cout << "FEASIBLE SOLUTION !!!";
@@ -313,7 +321,7 @@ int main(){
     //     }
     // }
 
-    string test = "6.5.1";
+    string test = "6.5.3";
     read_test(test + ".csv");
 
     read_param("params.csv");

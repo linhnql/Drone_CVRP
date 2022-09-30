@@ -37,14 +37,13 @@ typedef struct fields{
 map<string, fields> params;  
 
 void read_param(string file_name){
-    string fname = "./test/";
-    fname += file_name;
+    file_name = "./test/" + file_name;
 
     vector<vector<string>> content;
     vector<string> row;
     string line, word;
 
-    fstream file (fname, ios::in);
+    fstream file (file_name, ios::in);
     if(file.is_open()){
        while(getline(file, line)){
             row.clear();
