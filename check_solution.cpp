@@ -55,7 +55,7 @@ map<string, fields> params;
 int flag;
 
 double calculate_distance(pair<double, double> &x, pair<double, double> &y){
-    return sqrt(pow(x.first - y.first, 2) + pow(x.second - y.second, 2));
+    return sqrt((x.first - y.first)*(x.first - y.first) + (x.second - y.second)*(x.second - y.second));
 }
 
 void read_test(string file_name){
@@ -250,6 +250,9 @@ void check_customer(){
 }
 
 void check_solution(string file_name){
+    for (int i = 1; i < n; ++i){
+        customer[i].delivered = 0;
+    }
     file_name = "./solution/" + file_name;
     std::ifstream file(file_name, std::ios_base::in);
     vector<string> lines;
@@ -267,7 +270,7 @@ void check_solution(string file_name){
             M = stoi(line);
             break;
         }
-        else exit(0);
+        else return;//exit(0);
     } 
     
     // check drone
@@ -283,8 +286,8 @@ void check_solution(string file_name){
             double router_dis = check_drone_router(line, i+1, router);
             total_dis += router_dis;
         }
-        // cout << "total_dis drone: " << i << " " << total_dis << endl;
         double total_time = total_dis/drone_speed;
+        cout << "total_time drone: " << i << " " << total_time << endl;
         if (total_time > limited_time) 
             flag = 1, printf("Drone %d violates working time: %f\n", i+1, total_time);
     }
@@ -313,7 +316,7 @@ int main(){
     //             limited_time = params[test].limited_time;
     //             truck_capacity = params[test].truck_capacity;
     //             drone_capacity = params[test].drone_capacity;
-
+                // can than 2 dong trong
     //             check_solution(str + ".txt");
     //             if (flag) not_feasible++;
     //             else cout << "FEASIBLE SOLUTION !!!";
@@ -333,7 +336,7 @@ int main(){
     limited_time = params[test].limited_time;
     truck_capacity = params[test].truck_capacity;
     drone_capacity = params[test].drone_capacity;
-
+    
     check_solution("fake_solu.txt");
     if (!flag) cout << "FEASIBLE SOLUTION";
 

@@ -3,16 +3,16 @@
 
 using namespace std;
 
-typedef struct __truck
+typedef struct truck__
 {
     int load;            // lượng hàng còn lại
     double total_time;   // tổng thời gian đã chạy
     int cus_amount[100]; // lượng hàng truck i giao cho khách j
     int route[100];      // luot route_idx giao cho khach idx
     // int flag[100];
-} __truck;
+} truck__;
 
-typedef struct __drone
+typedef struct drone__
 {
     int load;
     int flag_duration;
@@ -24,9 +24,9 @@ typedef struct __drone
     double route_time[10];
     int cus_amount[100][100]; // lượng hàng drone i trong hành trình k giao cho khách j
     // int flag[100];
-} __drone;
+} drone__;
 
-typedef struct __customer
+typedef struct customer__
 {
     double x;
     double y;
@@ -36,14 +36,14 @@ typedef struct __customer
     int delivered;
     int truck_flag;
     int drone_flag[100];
-} __customer;
+} customer__;
 
-typedef struct __drone_rate
+typedef struct drone_rate
 {
     double rate;
     int idx;
     double to_low;
-} __drone_rate;
+} drone_rate;
 
 int n, K = 1, M = 1;
 int truck_speed = 40, drone_speed = 60;
@@ -54,9 +54,9 @@ bool resFlag = false;
 vector<pair<double, double>> index_customer; // toạ độ khách hàng
 vector<vector<double>> matrix_dist;          // khoảng cách giữa các khách hàng (n, vector<double>(n))
 
-__truck truck[100];
-__drone drone[100];
-__customer customer[100];
+truck__ truck[100];
+drone__ drone[100];
+customer__ customer[100];
 
 void read_test(string file_name)
 {
@@ -142,7 +142,7 @@ vector<pair<double, int>> select_customer_truck(int k, int num)
     return rate;
 }
 
-bool compare_drone(__drone_rate &x, __drone_rate &y)
+bool compare_drone(drone_rate &x, drone_rate &y)
 {
     if (x.to_low >= 0 && y.to_low >= 0)
     {
@@ -150,13 +150,13 @@ bool compare_drone(__drone_rate &x, __drone_rate &y)
     }
     return x.to_low < y.to_low;
 }
-vector<__drone_rate> select_customer_drone(int k, int num)
+vector<drone_rate> select_customer_drone(int k, int num)
 {
-    vector<__drone_rate> rate;
+    vector<drone_rate> rate;
     drone[num].flag_duration = 0;
     for (int i = 0; i < n; ++i)
     {
-        __drone_rate addRate;
+        drone_rate addRate;
         addRate.idx = i;
         addRate.rate = i == k ? 0 : (customer[i].weight * (customer[i].low + customer[i].upper) / 2) / matrix_dist[k][i];
         addRate.to_low = customer[i].delivered - customer[i].low;
@@ -276,7 +276,7 @@ void BT_drone(int j, int idx, int k, int route_idx) // drone j di chu trinh thu 
     customer[idx].delivered += delivered;
     drone[j].cus_amount[k][idx] = delivered;
 
-    vector<__drone_rate> rateArr = select_customer_drone(idx, j);
+    vector<drone_rate> rateArr = select_customer_drone(idx, j);
     if (rateArr.size() == 0)
     {
         if (drone[j].flag_duration != 1)
@@ -285,7 +285,7 @@ void BT_drone(int j, int idx, int k, int route_idx) // drone j di chu trinh thu 
         }
         else if (drone[j].flag_duration == 1)
         {
-            __drone tmp = drone[j];
+            drone__ tmp = drone[j];
             drone[j].total_time += matrix_dist[idx][0] / drone_speed;
             drone[j].load = drone_capacity;
             drone[j].process_time = 0;
