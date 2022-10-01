@@ -239,8 +239,9 @@ void BT_drone(int j, int idx, int k, int route_idx) // drone j di chu trinh thu 
     // truck[j].flag[idx] = 1;
 
     int rate = (drone[j].load / drone_capacity) / ((limited_time - drone[j].process_time) / limited_time);
-    int delivered;
-    if (rate >= 1)
+    int amount = (rate < 1 ? customer[idx].low : customer[idx].upper) - customer[idx].delivered;
+    int delivered = amount > drone[j].load ? drone[j].load : amount;
+    /*if (rate >= 1)
     {
         int amount_full = customer[idx].upper - customer[idx].delivered;
         delivered = amount_full > drone[j].load ? drone[j].load : amount_full;
@@ -249,7 +250,7 @@ void BT_drone(int j, int idx, int k, int route_idx) // drone j di chu trinh thu 
     {
         int amount_qualified = customer[idx].low - customer[idx].delivered;
         delivered = amount_qualified > drone[j].load ? drone[j].load : amount_qualified;
-    }
+    }*/
 
     drone[j].load -= delivered;
     customer[idx].delivered += delivered;
