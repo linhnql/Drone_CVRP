@@ -3,24 +3,28 @@
 
 using namespace std;
 
-typedef struct __truck{
-    int load; // lượng hàng còn lại
-    double total_time; // tổng thời gian đã chạy
+typedef struct __truck
+{
+    int load;            // lượng hàng còn lại
+    double total_time;   // tổng thời gian đã chạy
     int cus_amount[100]; // lượng hàng truck i giao cho khách j
+    int route[100];      // luot route_idx giao cho khach idx
     // int flag[100];
-}__truck;
+} __truck;
 
-typedef struct __drone{
+typedef struct __drone
+{
     int load;
     double total_time;
     double process_time;
-    int route;
+    int route[100];
     double route_time[10];
-    int cus_amount[10][100]; // lượng hàng drone i trong hành trình j giao cho khách k
+    int cus_amount[100][100]; // lượng hàng drone i trong hành trình k giao cho khách j
     // int flag[100];
-}__drone;
+} __drone;
 
-typedef struct __customer{
+typedef struct __customer
+{
     double x;
     double y;
     int low;
@@ -29,18 +33,26 @@ typedef struct __customer{
     int delivered;
     int truck_flag;
     int drone_flag;
-}__customer;
+} __customer;
+
+typedef struct __drone_rate
+{
+    double rate;
+    int idx;
+    double to_low;
+} __drone_rate;
 
 int n, K = 1, M = 1;
 int truck_speed = 40, drone_speed = 60;
-int drone_duration = 30, work_time = 30; // time giới hạn d - drone bay 1 vòng, D chung
-int truck_capacity = 1500, drone_capacity = 40;        // trọng tải giới hạn     
+int drone_duration = 30, limited_time = 30;       // time giới hạn d - drone bay 1 vòng, D chung
+int truck_capacity = 1500, drone_capacity = 1500; // trọng tải giới hạn
+bool resFlag = false;
 
 vector<pair<double, double>> index_customer; // toạ độ khách hàng
 vector<vector<double>> matrix_dist;          // khoảng cách giữa các khách hàng (n, vector<double>(n))
 
-__truck truck[100];      
-__drone drone[100]; 
+__truck truck[100];
+__drone drone[100];
 __customer customer[100];
 
 void read_test(string file_name)
@@ -86,40 +98,6 @@ void read_test(string file_name)
     }
 }
 
-void check_truck_sol()
-{
-    cout << "\n";
-    for (int i = 1; i < n; i++)
-    {
-        if (customer[i].delivered < customer[i].low) return; 
-    }
-    for (int i = 0; i < K; ++i)
-    {
-        cout << "Truck: " << i << "\nRoute: ";
-        for (int j = 1; j < n; ++j)
-        {
-            cout << truck[i].cus_amount[j] << " ";
-        }
-        cout << "\n";
-    }
-}
-
-void check_drone_sol(){
-    for (int i = 0; i < M; ++i)
-    {
-        cout << "Drone: " << i << endl;
-        for (int j = 0; j < drone[i].route; ++j)
-        {
-            cout << "Route " << j << "\n";
-            for (int k = 0; k < n; ++k)
-            {
-                cout << drone[i].cus_amount[j][k] << " ";
-            }
-            cout << "\n";
-        }
-    }
-}
-
 double calculate_distance(pair<double, double> &x, pair<double, double> &y)
 {
     return sqrt(pow(x.first - y.first, 2) + pow(x.second - y.second, 2));
@@ -139,14 +117,10 @@ vector<pair<double, int>> select_customer_truck(int k, int num)
         else
             rate.push_back({(customer[i].weight * (customer[i].low + customer[i].upper) / 2) / matrix_dist[k][i], i});
     }
-    // for (auto element : rate) {
-    //     cout << element << " ";
-    // }
 
     int deleted = 0;
     for (int i = 0; i < n; ++i)
     {
-        // if (truck[num].flag[i])
         if (customer[i].truck_flag == 1)
         {
             rate.erase(rate.begin() + i - deleted);
@@ -155,73 +129,47 @@ vector<pair<double, int>> select_customer_truck(int k, int num)
         }
         double time_to_i_and_back_depot = (matrix_dist[k][i] + matrix_dist[i][0]) / truck_speed;
         double total_with_back_dp = truck[num].total_time + time_to_i_and_back_depot;
-        if (total_with_back_dp > work_time)
+        if (total_with_back_dp > limited_time)
         {
             rate.erase(rate.begin() + i - deleted);
             deleted++;
         }
     }
-    // while (truck_flag[i] == 1 || total_with_back_dp > work_time)
-    // {
-    //     rate.erase(rate.begin() + i);
-    //     // for (auto element : rate) {
-    //     //     cout << element << " ";
-    //     // }cout << endl;
-    //     if (rate.size() == 0)
-    //         return rate;
-
-    //     i = max_element(rate.begin(), rate.end()) - rate.begin();
-    //     time_to_i_and_back_depot = (matrix_dist[k][i] + matrix_dist[i][0]) / truck_speed;
-
-    //     total_with_back_dp = time_truck[num] + time_to_i_and_back_depot;
-    // }
-
-    // time_truck[num] += matrix_dist[k][i] / truck_speed;
     sort(rate.begin(), rate.end(), compare);
     return rate;
 }
 
-int index_time_smallest(vector<double> rate, int k, int route, int num)
+bool compare_drone(__drone_rate &x, __drone_rate &y)
 {
-    // check time
-    // khi lớn nhất mà ko thoả mãn thì xoá nó, tiếp tục lặp tìm
-    if (rate.size() == 0)
-        return -1;
-    for (auto ele: rate) cout << ele << " "; cout << endl;
-
-    int i = min_element(rate.begin(), rate.end()) - rate.begin();
-    double time_to_i_and_back_depot = (matrix_dist[k][i] + matrix_dist[i][0]) / drone_speed;
-    double total_with_back_dp = drone[num].total_time + time_to_i_and_back_depot;
-    double route_with_back_dp = drone[num].route_time[route] + time_to_i_and_back_depot;
-
-    while (customer[i].delivered > customer[i].low || total_with_back_dp > work_time || route_with_back_dp > drone_duration)
+    if (x.to_low <= 0 && y.to_low <= 0)
     {
-        rate.erase(rate.begin() + i);
-        if (rate.size() == 0)
-            return -1;
-
-        i = min_element(rate.begin(), rate.end()) - rate.begin();
-        time_to_i_and_back_depot = (matrix_dist[k][i] + matrix_dist[i][0]) / drone_speed;
-        total_with_back_dp = drone[num].total_time + time_to_i_and_back_depot;
-        route_with_back_dp = drone[num].route_time[route] + time_to_i_and_back_depot;
+        return x.rate > y.rate;
     }
-
-    drone[num].total_time += matrix_dist[k][i] / drone_speed;
-    drone[num].route_time[route] += matrix_dist[k][i] / drone_speed;
-    return i;
+    return x.to_low > y.to_low;
 }
-
-vector<pair<double, int>> select_customer_drone(int k, int route, int num)
+vector<__drone_rate> select_customer_drone(int k, int num)
 {
-    vector<pair<double, int>> rate;
+    vector<__drone_rate> rate;
     for (int i = 0; i < n; ++i)
     {
         if (i == k)
-            rate.push_back({0, i});
+        {
+            __drone_rate addRate;
+            addRate.idx = i;
+            addRate.rate = 0;
+            addRate.to_low = customer[i].delivered - customer[i].low;
+            rate.push_back(addRate);
+        }
+
         else
-            rate.push_back({(customer[i].weight * (customer[i].low + customer[i].upper) / 2) / matrix_dist[k][i], i});
+        {
+            __drone_rate addRate;
+            addRate.idx = i;
+            addRate.rate = (customer[i].weight * (customer[i].low + customer[i].upper) / 2) / matrix_dist[k][i];
+            addRate.to_low = customer[i].delivered - customer[i].low;
+            rate.push_back(addRate);
+        }
     }
-    // for (auto ele: rate) cout << ele << " "; cout << endl;
     int deleted = 0;
     for (int i = 0; i < n; ++i)
     {
@@ -232,32 +180,118 @@ vector<pair<double, int>> select_customer_drone(int k, int route, int num)
             continue;
         }
         double time_to_i_and_back_depot = (matrix_dist[k][i] + matrix_dist[i][0]) / drone_speed;
-        double total_with_back_dp = drone[num].total_time + time_to_i_and_back_depot;
+        // double total_with_back_dp = drone[num].total_time + time_to_i_and_back_depot;
+        double total_process_with_back_dp = drone[num].process_time + time_to_i_and_back_depot;
         // check time hanh trinh va time work day
-        if (total_with_back_dp > work_time)
+        if (total_process_with_back_dp > drone_duration)
         {
             rate.erase(rate.begin() + i - deleted);
             deleted++;
         }
     }
-    sort(rate.begin(), rate.end(), compare);
+    sort(rate.begin(), rate.end(), compare_drone);
     return rate;
 }
 
-void BT_truck(int j, int idx)
+void check_drone_sol()
 {
-    cout << idx << " ";
-    // nếu tất cả các xe đã đi qua tất cả khách -> check sol
+    for (int i = 1; i < n; i++)
+    {
+        if (customer[i].delivered < customer[i].low)
+            return;
+    }
+    cout << "Result\n";
+    resFlag = true;
+    for (int i = 0; i < K; ++i)
+    {
+        cout << "Truck: " << i << "\nRoute:\n";
+        for (int j = 1; j < n; ++j)
+        {
+            cout << "- " << truck[i].route[j] << " " << truck[i].cus_amount[truck[i].route[j]] << "\n";
+        }
+        cout << "\n";
+    }
+    for (int i = 0; i < M; ++i)
+    {
+        cout << "Drone: " << i << endl;
+        cout << "Route 0:"
+             << "\n";
+        for (int j = 1; j < n; ++j)
+        {
+            cout << "- " << drone[i].route[j] << " " << drone[i].cus_amount[j][0] << "\n";
+        }
+    }
+}
+
+void BT_drone(int j, int idx, int k, int route_idx) // drone j di chu trinh thu k
+{
+    if (resFlag)
+        return;
+    // cout << idx << " ";
+    // nếu tất cả các drone đã đi qua tất cả khách -> check sol
+    if (j >= M)
+    {
+        check_drone_sol();
+        return;
+    }
+
+    customer[idx].drone_flag = 1;
+    // truck[j].flag[idx] = 1;
+
+    int rate = (drone[j].load / drone_capacity) / ((limited_time - drone[j].process_time) / limited_time);
+    int delivered;
+    if (rate >= 1)
+    {
+        int amount_full = customer[idx].upper - customer[idx].delivered;
+        delivered = amount_full > drone[j].load ? drone[j].load : amount_full;
+    }
+    else
+    {
+        int amount_qualified = customer[idx].low - customer[idx].delivered;
+        delivered = amount_qualified > drone[j].load ? drone[j].load : amount_qualified;
+    }
+
+    drone[j].load -= delivered;
+    customer[idx].delivered += delivered;
+    drone[j].cus_amount[k][idx] = delivered;
+
+    vector<__drone_rate> rateArr = select_customer_drone(idx, j);
+    if (rateArr.size() == 0)
+        BT_drone(j + 1, 0, 0, 0);
+    else
+        for (int i = 0; i < rateArr.size(); i++)
+        {
+            truck[j].total_time += matrix_dist[idx][i] / truck_speed;
+            BT_drone(j, rateArr[i].idx, 0, route_idx + 1);
+            truck[j].total_time -= matrix_dist[idx][i] / truck_speed;
+        }
+    customer[idx].drone_flag = 0;
+    drone[j].load += delivered;
+    customer[idx].delivered -= delivered;
+    drone[j].cus_amount[k][idx] = 0;
+}
+
+void check_truck_sol()
+{
+    // giao low (lam sau)
+    BT_drone(0, 0, 0, 0);
+}
+
+void BT_truck(int j, int idx, int route_idx)
+{
+    if (resFlag)
+        return;
+    truck[j].route[route_idx] = idx;
     if (j >= K)
     {
         check_truck_sol();
-        return; 
+        return;
     }
 
     customer[idx].truck_flag = 1;
-    // truck[j].flag[idx] = 1; 
-    
-    int rate = (truck[j].load / truck_capacity) / ((work_time - truck[j].total_time) / work_time);
+    // truck[j].flag[idx] = 1;
+
+    int rate = (truck[j].load / truck_capacity) / ((limited_time - truck[j].total_time) / limited_time);
 
     int amount = (rate < 1 ? customer[idx].low : customer[idx].upper) - customer[idx].delivered;
     int delivered = amount > truck[j].load ? truck[j].load : amount;
@@ -278,64 +312,18 @@ void BT_truck(int j, int idx)
 
     vector<pair<double, int>> rateArr = select_customer_truck(idx, j);
     if (rateArr.size() == 0)
-        BT_truck(j + 1, 0);
+        BT_truck(j + 1, 0, 0);
     else
         for (int i = 0; i < rateArr.size(); i++)
         {
-            truck[j].total_time += matrix_dist[idx][i]/truck_speed;
-            BT_truck(j, rateArr[i].second);
-            truck[j].total_time -= matrix_dist[idx][i]/truck_speed;
+            truck[j].total_time += matrix_dist[idx][i] / truck_speed;
+            BT_truck(j, rateArr[i].second, route_idx + 1);
+            truck[j].total_time -= matrix_dist[idx][i] / truck_speed;
         }
     customer[idx].truck_flag = 0;
     truck[j].load += delivered;
     customer[idx].delivered -= delivered;
     truck[j].cus_amount[idx] = 0;
-}
-
-void BT_drone(int j, int idx)
-{
-    // cout << idx << " ";
-    // // nếu tất cả các drone đã đi qua tất cả khách -> check sol
-    // if (j >= M)
-    // {
-    //     check_drone_sol();
-    //     return; 
-    // }
-
-    // customer[idx].drone_flag = 1;
-    // // truck[j].flag[idx] = 1; 
-    
-    // int rate = (drone[j].load / drone_capacity) / ((work_time - drone[j].total_time) / work_time);
-    // int delivered;
-    // if (rate >= 1)
-    // {
-    //     int amount_full = customer[idx].upper - customer[idx].delivered;
-    //     delivered =  amount_full > drone[j].load ? drone[j].load : amount_full;
-    // }
-    // else
-    // {
-    //     int amount_qualified = customer[idx].low - customer[idx].delivered;
-    //     delivered = amount_qualified > drone[j].load ? drone[j].load : amount_qualified;
-    // }
-
-    // drone[j].load -= delivered;
-    // customer[idx].delivered += delivered;
-    // drone[j].cus_amount[idx] = delivered;
-
-    // vector<pair<double, int>> rateArr = select_customer_drone(idx, j);
-    // if (rateArr.size() == 0)
-    //     BT_drone(j + 1, 0);
-    // else
-    //     for (int i = 0; i < rateArr.size(); i++)
-    //     {
-    //         drone[j].total_time += matrix_dist[idx][i]/drone_speed;
-    //         BT_drone(j, rateArr[i].second);
-    //         drone[j].total_time -= matrix_dist[idx][i]/drone_speed;
-    //     }
-    // customer[idx].drone_flag = 0;
-    // drone[j].load += delivered;
-    // customer[idx].delivered -= delivered;
-    // drone[j].cus_amount[idx] = 0;
 }
 
 int main()
@@ -349,7 +337,7 @@ int main()
     //             str = to_string(cus) + "." + to_string(area[i]) + "." + to_string(j) + ".csv";
     //             read_test(str);
     //             ....
-    //         } 
+    //         }
     //     }
     // }
     read_test("6.5.3.csv");
@@ -371,7 +359,7 @@ int main()
         // truck[i].flag[0] = 1;
         // drone[i].flag[0] = 1;
     }
-    BT_truck(0, 0);
+    BT_truck(0, 0, 0);
 
     // drone giao cho đủ low, xuất phát từ dron j
     // customer[1].delivered = 50;
@@ -386,15 +374,6 @@ int main()
     // customer[4].truck_flag = 1;
     // customer[5].truck_flag = 1;
     // customer[6].truck_flag = 1;
-    for (int j = 0; j < M; ++j)
-    {
-        drone[j].route = 0;
-        drone[j].load = drone_capacity;
-    }
-    //giao low (lam sau)
-
-    // BT
-    BT_drone(0, 0);
 
     return 0;
 }
