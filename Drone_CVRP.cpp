@@ -152,7 +152,7 @@ vector<__drone_rate> select_customer_drone(int k, int num)
     vector<__drone_rate> rate;
     for (int i = 0; i < n; ++i)
     {
-        if (i == k)
+        /*if (i == k)
         {
             __drone_rate addRate;
             addRate.idx = i;
@@ -162,13 +162,13 @@ vector<__drone_rate> select_customer_drone(int k, int num)
         }
 
         else
-        {
+        {*/
             __drone_rate addRate;
             addRate.idx = i;
-            addRate.rate = (customer[i].weight * (customer[i].low + customer[i].upper) / 2) / matrix_dist[k][i];
+            addRate.rate = i == k ? 0 : (customer[i].weight * (customer[i].low + customer[i].upper) / 2) / matrix_dist[k][i];
             addRate.to_low = customer[i].delivered - customer[i].low;
             rate.push_back(addRate);
-        }
+        //}
     }
     int deleted = 0;
     for (int i = 0; i < n; ++i)
