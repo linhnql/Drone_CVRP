@@ -32,7 +32,7 @@ typedef struct __customer
     int weight; // lợi nhuận trên 1 đơn vị hàng
     int delivered;
     int truck_flag;
-    int drone_flag;
+    int drone_flag[100];
 } __customer;
 
 typedef struct __drone_rate
@@ -45,7 +45,7 @@ typedef struct __drone_rate
 int n, K = 1, M = 1;
 int truck_speed = 40, drone_speed = 60;
 int drone_duration = 30, limited_time = 30;       // time giới hạn d - drone bay 1 vòng, D chung
-int truck_capacity = 1500, drone_capacity = 1500; // trọng tải giới hạn
+int truck_capacity = 1500, drone_capacity = 40; // trọng tải giới hạn
 bool resFlag = false;
 
 vector<pair<double, double>> index_customer; // toạ độ khách hàng
@@ -141,39 +141,27 @@ vector<pair<double, int>> select_customer_truck(int k, int num)
 
 bool compare_drone(__drone_rate &x, __drone_rate &y)
 {
-    if (x.to_low <= 0 && y.to_low <= 0)
+    if (x.to_low >= 0 && y.to_low >= 0)
     {
         return x.rate > y.rate;
     }
-    return x.to_low > y.to_low;
+    return x.to_low < y.to_low;
 }
 vector<__drone_rate> select_customer_drone(int k, int num)
 {
     vector<__drone_rate> rate;
     for (int i = 0; i < n; ++i)
     {
-        /*if (i == k)
-        {
-            __drone_rate addRate;
-            addRate.idx = i;
-            addRate.rate = 0;
-            addRate.to_low = customer[i].delivered - customer[i].low;
-            rate.push_back(addRate);
-        }
-
-        else
-        {*/
-            __drone_rate addRate;
-            addRate.idx = i;
-            addRate.rate = i == k ? 0 : (customer[i].weight * (customer[i].low + customer[i].upper) / 2) / matrix_dist[k][i];
-            addRate.to_low = customer[i].delivered - customer[i].low;
-            rate.push_back(addRate);
-        //}
+        __drone_rate addRate;
+        addRate.idx = i;
+        addRate.rate = i == k ? 0 : (customer[i].weight * (customer[i].low + customer[i].upper) / 2) / matrix_dist[k][i];
+        addRate.to_low = customer[i].delivered - customer[i].low;
+        rate.push_back(addRate);
     }
     int deleted = 0;
     for (int i = 0; i < n; ++i)
     {
-        if (customer[i].drone_flag == 1)
+        if (customer[i].drone_flag[num] == 1 || customer[i].delivered == customer[i].upper)
         {
             rate.erase(rate.begin() + i - deleted);
             deleted++;
@@ -218,7 +206,7 @@ void check_drone_sol()
              << "\n";
         for (int j = 1; j < n; ++j)
         {
-            cout << "- " << drone[i].route[j] << " " << drone[i].cus_amount[j][0] << "\n";
+            cout << "- " << drone[i].route[j] << " " << drone[i].cus_amount[0][drone[i].route[j]] << "\n";
         }
     }
 }
@@ -227,7 +215,8 @@ void BT_drone(int j, int idx, int k, int route_idx) // drone j di chu trinh thu 
 {
     if (resFlag)
         return;
-    // cout << idx << " ";
+
+    drone[j].route[route_idx] = idx;
     // nếu tất cả các drone đã đi qua tất cả khách -> check sol
     if (j >= M)
     {
@@ -235,22 +224,14 @@ void BT_drone(int j, int idx, int k, int route_idx) // drone j di chu trinh thu 
         return;
     }
 
-    customer[idx].drone_flag = 1;
+    customer[idx].drone_flag[j] = 1;
     // truck[j].flag[idx] = 1;
 
     int rate = (drone[j].load / drone_capacity) / ((limited_time - drone[j].process_time) / limited_time);
-    int amount = (rate < 1 ? customer[idx].low : customer[idx].upper) - customer[idx].delivered;
+    int amount = customer[idx].low - customer[idx].delivered;
+    if (amount <= 0)
+        amount = customer[idx].upper - customer[idx].delivered;
     int delivered = amount > drone[j].load ? drone[j].load : amount;
-    /*if (rate >= 1)
-    {
-        int amount_full = customer[idx].upper - customer[idx].delivered;
-        delivered = amount_full > drone[j].load ? drone[j].load : amount_full;
-    }
-    else
-    {
-        int amount_qualified = customer[idx].low - customer[idx].delivered;
-        delivered = amount_qualified > drone[j].load ? drone[j].load : amount_qualified;
-    }*/
 
     drone[j].load -= delivered;
     customer[idx].delivered += delivered;
@@ -266,7 +247,7 @@ void BT_drone(int j, int idx, int k, int route_idx) // drone j di chu trinh thu 
             BT_drone(j, rateArr[i].idx, 0, route_idx + 1);
             truck[j].total_time -= matrix_dist[idx][i] / truck_speed;
         }
-    customer[idx].drone_flag = 0;
+    customer[idx].drone_flag[j] = 0;
     drone[j].load += delivered;
     customer[idx].delivered -= delivered;
     drone[j].cus_amount[k][idx] = 0;
@@ -296,16 +277,6 @@ void BT_truck(int j, int idx, int route_idx)
 
     int amount = (rate < 1 ? customer[idx].low : customer[idx].upper) - customer[idx].delivered;
     int delivered = amount > truck[j].load ? truck[j].load : amount;
-    /*if (rate >= 1)
-    {
-        int amount_full = customer[idx].upper - customer[idx].delivered;
-        delivered =  amount_full > truck[j].load ? truck[j].load : amount_full;
-    }
-    else
-    {
-        int amount_qualified = customer[idx].low - customer[idx].delivered;
-        delivered = amount_qualified > truck[j].load ? truck[j].load : amount_qualified;
-    }*/
 
     truck[j].load -= delivered;
     customer[idx].delivered += delivered;
@@ -353,28 +324,15 @@ int main()
         matrix_dist.push_back(temp);
     }
 
-    for (int i = 0, j = 0; i < M, j < K; ++i, ++j)
+    for (int i = 0; i < M; ++i)
     {
-        truck[j].load = truck_capacity;
         drone[i].load = drone_capacity;
-        // truck[i].flag[0] = 1;
-        // drone[i].flag[0] = 1;
+    }
+    for (int i = 0; i < K; ++i)
+    {
+        truck[i].load = truck_capacity;
     }
     BT_truck(0, 0, 0);
-
-    // drone giao cho đủ low, xuất phát từ dron j
-    // customer[1].delivered = 50;
-    // customer[2].delivered = 50;
-    // customer[3].delivered = 100;
-    // customer[4].delivered = 500;
-    // customer[5].delivered = 100;
-    // customer[6].delivered = 500;
-    // customer[1].truck_flag = 1;
-    // customer[2].truck_flag = 1;
-    // customer[3].truck_flag = 1;
-    // customer[4].truck_flag = 1;
-    // customer[5].truck_flag = 1;
-    // customer[6].truck_flag = 1;
 
     return 0;
 }
