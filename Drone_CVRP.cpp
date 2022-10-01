@@ -45,14 +45,24 @@ typedef struct drone_rate
     double to_low;
 } drone_rate;
 
-int n, K = 1, M = 1;
-int truck_speed = 40, drone_speed = 60;
-int drone_duration = 30, limited_time = 30;     // time giới hạn d - drone bay 1 vòng, D chung
-int truck_capacity = 1500, drone_capacity = 40; // trọng tải giới hạn
+typedef struct fields
+{
+    int K; // number_truck
+    int M; // number_drone
+    int truck_speed, drone_speed;
+    int drone_duration, limited_time; // time giới hạn d - drone bay 1 vòng, D chung
+    int truck_capacity, drone_capacity;
+} fields;
+
+int n, K, M;
+int truck_speed, drone_speed;
+int drone_duration, limited_time;   // time giới hạn d - drone bay 1 vòng, D chung
+int truck_capacity, drone_capacity; // trọng tải giới hạn
 bool resFlag = false;
 
 vector<pair<double, double>> index_customer; // toạ độ khách hàng
 vector<vector<double>> matrix_dist;          // khoảng cách giữa các khách hàng (n, vector<double>(n))
+map<string, fields> params;
 
 truck__ truck[100];
 drone__ drone[100];
@@ -61,7 +71,7 @@ customer__ customer[100];
 void read_test(string file_name)
 {
     string fname = "./test/";
-    fname += file_name;
+    fname += file_name + ".csv";
 
     vector<vector<string>> content;
     vector<string> row;
@@ -101,15 +111,108 @@ void read_test(string file_name)
     }
 }
 
+void read_param(string file_name)
+{
+    file_name = "./test/" + file_name;
+    fstream file(file_name, ios::in);
+    vector<vector<string>> content;
+    vector<string> row;
+    string line, word;
+
+    if (file.is_open())
+    {
+        while (getline(file, line))
+        {
+            row.clear();
+
+            stringstream str(line);
+
+            while (getline(str, word, ','))
+                row.push_back(word);
+            content.push_back(row);
+        }
+    }
+    else
+        cout << "Could not open the file\n";
+
+    int num_params = content.size();
+
+    for (int i = 1; i < num_params; i++)
+    {
+        istringstream iss(content[i][1]);
+        string num_cus;
+        getline(iss, num_cus, '.');
+        string num_truck, num_drone;
+        int num_length = content[i][3].length();
+        if (num_length > 1)
+        {
+            num_truck = content[i][3][num_length - 2];
+            num_drone = content[i][4][num_length - 2];
+        }
+        else
+        {
+            num_truck = num_length == 0 ? (num_cus == "12" ? "2" : "4") : content[i][3];
+            num_drone = num_length == 0 ? (num_cus == "12" ? "2" : "4") : content[i][4];
+        }
+        string limited_time = content[i][5].length() == 0 ? (num_cus == "12" ? "50" : "80") : content[i][5];
+        string str = content[i][1];
+        fields fields__;
+        fields__.K = stoi(num_truck);
+        fields__.M = stoi(num_drone);
+        fields__.limited_time = stoi(limited_time);
+        fields__.truck_capacity = stoi(content[i][6]);
+        fields__.drone_capacity = stoi(content[i][7]);
+        fields__.drone_speed = stoi(content[i][8]);
+        fields__.truck_speed = stoi(content[i][9]);
+        fields__.drone_duration = stoi(content[i][10]);
+        params.insert(make_pair(str, fields__));
+    }
+}
+
 double calculate_distance(pair<double, double> &x, pair<double, double> &y)
 {
-    return sqrt(pow(x.first - y.first, 2) + pow(x.second - y.second, 2));
+    return sqrt((x.first - y.first) * (x.first - y.first) + (x.second - y.second) * (x.second - y.second));
+}
+
+void init(string test)
+{
+    read_test(test);
+
+    read_param("params.csv");
+    K = params[test].K;
+    M = params[test].M;
+    truck_speed = params[test].truck_speed;
+    drone_speed = params[test].drone_speed;
+    drone_duration = params[test].drone_duration;
+    limited_time = params[test].limited_time;
+    truck_capacity = params[test].truck_capacity;
+    drone_capacity = params[test].drone_capacity;
+
+    for (int i = 0; i < n; ++i)
+    {
+        vector<double> temp;
+        for (int j = 0; j < n; ++j)
+        {
+            temp.push_back(calculate_distance(index_customer[i], index_customer[j]));
+        }
+        matrix_dist.push_back(temp);
+    }
+
+    for (int i = 0; i < M; ++i)
+    {
+        drone[i].load = drone_capacity;
+    }
+    for (int i = 0; i < K; ++i)
+    {
+        truck[i].load = truck_capacity;
+    }
 }
 
 bool compare(pair<double, int> &x, pair<double, int> &y)
 {
     return x.first > y.first;
 }
+
 vector<pair<double, int>> select_customer_truck(int k, int num)
 {
     vector<pair<double, int>> rate;
@@ -249,7 +352,7 @@ void check_drone_sol()
     }
 }
 
-void BT_drone(int j, int idx, int k, int route_idx) // drone j di chu trinh thu k
+void BT_Drone(int j, int idx, int k, int route_idx) // drone j di chu trinh thu k
 {
     if (resFlag)
         return;
@@ -264,7 +367,6 @@ void BT_drone(int j, int idx, int k, int route_idx) // drone j di chu trinh thu 
     }
 
     customer[idx].drone_flag[j] = 1;
-    // truck[j].flag[idx] = 1;
 
     int rate = (drone[j].load / drone_capacity) / ((limited_time - drone[j].process_time) / limited_time);
     int amount = customer[idx].low - customer[idx].delivered;
@@ -281,7 +383,7 @@ void BT_drone(int j, int idx, int k, int route_idx) // drone j di chu trinh thu 
     {
         if (drone[j].flag_duration != 1)
         {
-            BT_drone(j + 1, 0, 0, 0);
+            BT_Drone(j + 1, 0, 0, 0);
         }
         else if (drone[j].flag_duration == 1)
         {
@@ -290,7 +392,7 @@ void BT_drone(int j, int idx, int k, int route_idx) // drone j di chu trinh thu 
             drone[j].load = drone_capacity;
             drone[j].process_time = 0;
             customer[idx].drone_flag[j] = 0;
-            BT_drone(j, 0, k + 1, 0);
+            BT_Drone(j, 0, k + 1, 0);
             customer[idx].drone_flag[j] = 1;
             drone[j] = tmp;
         }
@@ -300,7 +402,7 @@ void BT_drone(int j, int idx, int k, int route_idx) // drone j di chu trinh thu 
         {
             drone[j].total_time += matrix_dist[idx][i] / drone_speed;
             drone[j].process_time += matrix_dist[idx][i] / drone_speed;
-            BT_drone(j, rateArr[i].idx, k, route_idx + 1);
+            BT_Drone(j, rateArr[i].idx, k, route_idx + 1);
             drone[j].total_time -= matrix_dist[idx][i] / drone_speed;
             drone[j].process_time -= matrix_dist[idx][i] / drone_speed;
         }
@@ -311,25 +413,18 @@ void BT_drone(int j, int idx, int k, int route_idx) // drone j di chu trinh thu 
     drone[j].cus_amount[k][idx] = 0;
 }
 
-void check_truck_sol()
-{
-    // giao low (lam sau)
-    BT_drone(0, 0, 0, 0);
-}
-
-void BT_truck(int j, int idx, int route_idx)
+void BT_Truck(int j, int idx, int route_idx)
 {
     if (resFlag)
         return;
     truck[j].route[route_idx] = idx;
     if (j >= K)
     {
-        check_truck_sol();
+        BT_Drone(0, 0, 0, 0);
         return;
     }
 
     customer[idx].truck_flag = 1;
-    // truck[j].flag[idx] = 1;
 
     int rate = (truck[j].load / truck_capacity) / ((limited_time - truck[j].total_time) / limited_time);
 
@@ -342,12 +437,12 @@ void BT_truck(int j, int idx, int route_idx)
 
     vector<pair<double, int>> rateArr = select_customer_truck(idx, j);
     if (rateArr.size() == 0)
-        BT_truck(j + 1, 0, 0);
+        BT_Truck(j + 1, 0, 0);
     else
         for (int i = 0; i < rateArr.size(); i++)
         {
             truck[j].total_time += matrix_dist[idx][i] / truck_speed;
-            BT_truck(j, rateArr[i].second, route_idx + 1);
+            BT_Truck(j, rateArr[i].second, route_idx + 1);
             truck[j].total_time -= matrix_dist[idx][i] / truck_speed;
         }
     customer[idx].truck_flag = 0;
@@ -364,33 +459,15 @@ int main()
     // for (auto cus: num_cus){
     //     for (int i = cus < 50 ? 0 : 1; i < (cus < 50 ? 3 : 5); ++ i){
     //         for (int j = 1; j < 5; ++j){
-    //             str = to_string(cus) + "." + to_string(area[i]) + "." + to_string(j) + ".csv";
-    //             read_test(str);
-    //             ....
+    //             str = to_string(cus) + "." + to_string(area[i]) + "." + to_string(j);
+    //             init(str);
+    //             BT_Truck(0, 0, 0);
     //         }
     //     }
     // }
-    read_test("6.5.2.csv");
 
-    for (int i = 0; i < n; ++i)
-    {
-        vector<double> temp;
-        for (int j = 0; j < n; ++j)
-        {
-            temp.push_back(calculate_distance(index_customer[i], index_customer[j]));
-        }
-        matrix_dist.push_back(temp);
-    }
-
-    for (int i = 0; i < M; ++i)
-    {
-        drone[i].load = drone_capacity;
-    }
-    for (int i = 0; i < K; ++i)
-    {
-        truck[i].load = truck_capacity;
-    }
-    BT_truck(0, 0, 0);
+    init("6.5.3");
+    BT_Truck(0, 0, 0);
 
     return 0;
 }
