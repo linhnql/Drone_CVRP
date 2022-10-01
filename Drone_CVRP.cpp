@@ -63,6 +63,7 @@ bool resFlag = false;
 vector<pair<double, double>> index_customer; // toạ độ khách hàng
 vector<vector<double>> matrix_dist;          // khoảng cách giữa các khách hàng (n, vector<double>(n))
 map<string, fields> params;
+string output_name;
 
 truck__ truck[100];
 drone__ drone[100];
@@ -177,6 +178,7 @@ double calculate_distance(pair<double, double> &x, pair<double, double> &y)
 void init(string test)
 {
     read_test(test);
+    output_name = test;
 
     read_param("params.csv");
     K = params[test].K;
@@ -322,34 +324,50 @@ vector<drone_rate> select_customer_drone(int k, int num)
 
 void check_drone_sol()
 {
+    long long res = 0;
     for (int i = 1; i < n; i++)
     {
+        res += customer[i].delivered * customer[i].weight;
         if (customer[i].delivered < customer[i].low)
             return;
     }
-    cout << "Result\n";
+    string fname = "./solution/";
+    fname += output_name + ".txt";
+    ofstream outfile;
+    outfile.open(fname, ios::out | ios::trunc );
     resFlag = true;
+    outfile << res << "\n";
     for (int i = 0; i < K; ++i)
     {
-        cout << "Truck: " << i << "\nRoute:\n";
         for (int j = 1; j < n; ++j)
         {
-            cout << "- " << truck[i].route[j] << " " << truck[i].cus_amount[truck[i].route[j]] << "\n";
+            outfile << truck[i].route[j] - 1 << " ";
         }
-        cout << "\n";
+        outfile << "-1 ";
+        for (int j = 1; j < n; ++j)
+        {
+            outfile << truck[i].cus_amount[truck[i].route[j]] << " ";
+        }
+        outfile << "\n";
     }
     for (int i = 0; i < M; ++i)
     {
-        cout << "Drone: " << i << endl;
+        outfile << i + 1 << "\n";
         for (int ct = 0; ct <= drone[i].count_route; ct++)
         {
-            cout << "Route " << ct << ": \n";
             for (int j = 1; j < drone[i].total_route[ct]; ++j)
             {
-                cout << "- " << drone[i].route[j][ct] << " " << drone[i].cus_amount[ct][drone[i].route[j][ct]] << "\n";
+                outfile << drone[i].route[j][ct] << " ";
             }
+            outfile << "-1 ";
+            for (int j = 1; j < drone[i].total_route[ct]; ++j)
+            {
+                outfile << drone[i].cus_amount[ct][drone[i].route[j][ct]] << " ";
+            }
+            outfile << "\n";
         }
     }
+    outfile.close();
 }
 
 void BT_Drone(int j, int idx, int k, int route_idx) // drone j di chu trinh thu k
