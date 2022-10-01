@@ -9,6 +9,7 @@ typedef struct truck__
     double total_time;   // tổng thời gian đã chạy
     int cus_amount[100]; // lượng hàng truck i giao cho khách j
     int route[100];      // luot route_idx giao cho khach idx
+    int total_route;     // luot route_idx giao cho khach idx
     // int flag[100];
 } truck__;
 
@@ -21,7 +22,7 @@ typedef struct drone__
     int route[100][100];
     int total_route[100];
     int count_route;
-    double route_time[10];
+    double route_time[100];
     int cus_amount[100][100]; // lượng hàng drone i trong hành trình k giao cho khách j
     // int flag[100];
 } drone__;
@@ -34,7 +35,7 @@ typedef struct customer__
     int upper;
     int weight; // lợi nhuận trên 1 đơn vị hàng
     int delivered;
-    int truck_flag;
+    int truck_flag[100];
     int drone_flag[100];
 } customer__;
 
@@ -58,7 +59,7 @@ int n, K, M;
 int truck_speed, drone_speed;
 int drone_duration, limited_time;   // time giới hạn d - drone bay 1 vòng, D chung
 int truck_capacity, drone_capacity; // trọng tải giới hạn
-bool resFlag = false;
+bool resFlag;
 
 vector<pair<double, double>> index_customer; // toạ độ khách hàng
 vector<vector<double>> matrix_dist;          // khoảng cách giữa các khách hàng (n, vector<double>(n))
@@ -101,7 +102,7 @@ void read_test(string file_name)
     customer[0].low = 0;
     customer[0].upper = 0;
     customer[0].weight = 0;
-    customer[0].truck_flag = 1;
+    customer[0].truck_flag[0] = 1;
 
     for (int i = 1; i < n; i++)
     {
@@ -189,6 +190,17 @@ void init(string test)
     truck_capacity = params[test].truck_capacity;
     drone_capacity = params[test].drone_capacity;
 
+    resFlag = false;
+    index_customer.clear();
+    matrix_dist.clear();
+
+    // truck__ ii;
+    // for (int i = 0; i < 100; i++) truck[i] = ii;
+    // drone__ iii;
+    // for (int i = 0; i < 100; i++) drone[i] = iii;
+    // customer__ iiii;
+    // for (int i = 0; i < 100; i++) customer[i] = iiii;
+
     for (int i = 0; i < n; ++i)
     {
         vector<double> temp;
@@ -228,7 +240,13 @@ vector<pair<double, int>> select_customer_truck(int k, int num)
     int deleted = 0;
     for (int i = 0; i < n; ++i)
     {
-        if (customer[i].truck_flag == 1)
+        if (customer[i].delivered == customer[i].upper)
+        {
+            rate.erase(rate.begin() + i - deleted);
+            deleted++;
+            continue;
+        }
+        if (customer[i].truck_flag[num] == 1)
         {
             rate.erase(rate.begin() + i - deleted);
             deleted++;
@@ -338,18 +356,30 @@ void print_solution()
     outfile << res << "\n";
     for (int i = 0; i < K; ++i)
     {
-        for (int j = 1; j < n; ++j)
+        for (int j = 1; j < truck[i].total_route; ++j)
         {
             outfile << truck[i].route[j] << " ";
         }
         outfile << "-1 ";
-        for (int j = 1; j < n; ++j)
+        for (int j = 1; j < truck[i].total_route; ++j)
         {
             outfile << truck[i].cus_amount[truck[i].route[j]] << " ";
         }
         outfile << "\n";
     }
+    int ans = 0;
     for (int i = 0; i < M; ++i)
+    {
+        for (int ct = 0; ct <= drone[i].count_route; ct++)
+        {
+            if (drone[i].total_route[ct] > 1) {
+                ans++;
+                break;
+            }
+        }
+    }
+    outfile << ans << "\n";
+    for (int i = 0; i < ans; ++i)
     {
         outfile << i + 1 << "\n";
         for (int ct = 0; ct <= drone[i].count_route; ct++)
@@ -435,17 +465,26 @@ void BT_Truck(int j, int idx, int route_idx)
     if (resFlag)
         return;
     truck[j].route[route_idx] = idx;
+    truck[j].total_route++;
     if (j >= K)
     {
         BT_Drone(0, 0, 0, 0);
         return;
     }
 
-    customer[idx].truck_flag = 1;
+    customer[idx].truck_flag[j] = 1;
 
-    int rate = (truck[j].load / truck_capacity) / ((limited_time - truck[j].total_time) / limited_time);
+    int amount;
+    if (customer[idx].low > customer[idx].delivered)
+    {
+        int rate = (truck[j].load / truck_capacity) / ((limited_time - truck[j].total_time) / limited_time);
+        amount = (rate < 1 ? customer[idx].low : customer[idx].upper) - customer[idx].delivered;
+    }
+    else
+    {
+        amount = customer[idx].upper - customer[idx].delivered;
+    }
 
-    int amount = (rate < 1 ? customer[idx].low : customer[idx].upper) - customer[idx].delivered;
     int delivered = amount > truck[j].load ? truck[j].load : amount;
 
     truck[j].load -= delivered;
@@ -454,7 +493,10 @@ void BT_Truck(int j, int idx, int route_idx)
 
     vector<pair<double, int>> rateArr = select_customer_truck(idx, j);
     if (rateArr.size() == 0)
+    {
         BT_Truck(j + 1, 0, 0);
+    }
+
     else
         for (int i = 0; i < rateArr.size(); i++)
         {
@@ -462,7 +504,7 @@ void BT_Truck(int j, int idx, int route_idx)
             BT_Truck(j, rateArr[i].second, route_idx + 1);
             truck[j].total_time -= matrix_dist[idx][i] / truck_speed;
         }
-    customer[idx].truck_flag = 0;
+    customer[idx].truck_flag[j] = 0;
     truck[j].load += delivered;
     customer[idx].delivered -= delivered;
     truck[j].cus_amount[idx] = 0;
@@ -471,22 +513,22 @@ void BT_Truck(int j, int idx, int route_idx)
 int main()
 {
     read_param("params.csv");
-    int num_cus[5] = {6, 10, 12, 20, 50};
-    int area[5] = {5, 10, 20, 30, 40};
-    string str;
-    for (auto cus: num_cus){
-        for (int i = cus < 50 ? 0 : 1; i < (cus < 50 ? 3 : 5); ++ i){
-            for (int j = 1; j < 5; ++j){
-                str = to_string(cus) + "." + to_string(area[i]) + "." + to_string(j);
-                cout << str << "\n";
-                init(str);
-                BT_Truck(0, 0, 0);
-            }
-        }
-    }
+    // int num_cus[5] = {6, 10, 12, 20, 50};
+    // int area[5] = {5, 10, 20, 30, 40};
+    // string str;
+    // for (auto cus: num_cus){
+    //     for (int i = cus < 50 ? 0 : 1; i < (cus < 50 ? 3 : 5); ++ i){
+    //         for (int j = 1; j < 5; ++j){
+    //             str = to_string(cus) + "." + to_string(area[i]) + "." + to_string(j);
+    //             cout << str << "\n";
+    //             init(str);
+    //             BT_Truck(0, 0, 0);
+    //         }
+    //     }
+    // }
 
-    // init("6.5.3");
-    // BT_Truck(0, 0, 0);
+    init("10.5.1");
+    BT_Truck(0, 0, 0);
 
     return 0;
 }
