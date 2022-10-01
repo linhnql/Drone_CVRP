@@ -372,8 +372,10 @@ void print_solution()
     {
         for (int ct = 0; ct <= drone[i].count_route; ct++)
         {
-            if (drone[i].total_route[ct] > 1)
+            if (drone[i].total_route[ct] > 1) {
                 ans++;
+                break;
+            }
         }
     }
     outfile << ans << "\n";
@@ -526,7 +528,7 @@ int main()
     //     }
     // }
 
-    init("6.20.1");
+    init("10.5.1");
     BT_Truck(0, 0, 0);
 
     return 0;
