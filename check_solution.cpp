@@ -59,7 +59,7 @@ double calculate_distance(pair<double, double> &x, pair<double, double> &y){
 }
 
 void read_test(string file_name){
-    file_name = "./test/" + file_name;
+    file_name = "./test/" + file_name + ".csv";
     fstream file(file_name, ios::in);
     vector<vector<string>> content;
     vector<string> row;
@@ -253,7 +253,7 @@ void check_solution(string file_name){
     for (int i = 1; i < n; ++i){
         customer[i].delivered = 0;
     }
-    file_name = "./solution/" + file_name;
+    file_name = "./solution/" + file_name + ".txt";
     std::ifstream file(file_name, std::ios_base::in);
     vector<string> lines;
     string line;
@@ -305,7 +305,7 @@ int main(){
     //     for (int i = cus < 50 ? 0 : 1; i < (cus < 50 ? 3 : 5); ++ i){
     //         for (int j = 1; j < 5; ++j){
     //             str = to_string(cus) + "." + to_string(area[i]) + "." + to_string(j);
-    //             read_test(str + ".csv");
+    //             read_test(str);
 
     //             read_param("params.csv");
     //             K = params[test].K;
@@ -317,7 +317,7 @@ int main(){
     //             truck_capacity = params[test].truck_capacity;
     //             drone_capacity = params[test].drone_capacity;
                 // can than 2 dong trong
-    //             check_solution(str + ".txt");
+    //             check_solution(str);
     //             if (flag) not_feasible++;
     //             else cout << "FEASIBLE SOLUTION !!!";
     //         } 
@@ -337,7 +337,7 @@ int main(){
     truck_capacity = params[test].truck_capacity;
     drone_capacity = params[test].drone_capacity;
     
-    check_solution("fake_solu.txt");
+    check_solution(test);
     if (!flag) cout << "FEASIBLE SOLUTION";
 
     return 0;

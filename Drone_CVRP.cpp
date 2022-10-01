@@ -180,7 +180,6 @@ void init(string test)
     read_test(test);
     output_name = test;
 
-    read_param("params.csv");
     K = params[test].K;
     M = params[test].M;
     truck_speed = params[test].truck_speed;
@@ -322,7 +321,7 @@ vector<drone_rate> select_customer_drone(int k, int num)
     return rate;
 }
 
-void check_drone_sol()
+void print_solution()
 {
     long long res = 0;
     for (int i = 1; i < n; i++)
@@ -334,14 +333,14 @@ void check_drone_sol()
     string fname = "./solution/";
     fname += output_name + ".txt";
     ofstream outfile;
-    outfile.open(fname, ios::out | ios::trunc );
+    outfile.open(fname, ios::out | ios::trunc);
     resFlag = true;
     outfile << res << "\n";
     for (int i = 0; i < K; ++i)
     {
         for (int j = 1; j < n; ++j)
         {
-            outfile << truck[i].route[j] - 1 << " ";
+            outfile << truck[i].route[j] << " ";
         }
         outfile << "-1 ";
         for (int j = 1; j < n; ++j)
@@ -380,7 +379,7 @@ void BT_Drone(int j, int idx, int k, int route_idx) // drone j di chu trinh thu 
     // nếu tất cả các drone đã đi qua tất cả khách -> check sol
     if (j >= M)
     {
-        check_drone_sol();
+        print_solution();
         return;
     }
 
@@ -471,21 +470,23 @@ void BT_Truck(int j, int idx, int route_idx)
 
 int main()
 {
-    // int num_cus[5] = {6, 10, 12, 20, 50};
-    // int area[5] = {5, 10, 20, 30, 40};
-    // string str;
-    // for (auto cus: num_cus){
-    //     for (int i = cus < 50 ? 0 : 1; i < (cus < 50 ? 3 : 5); ++ i){
-    //         for (int j = 1; j < 5; ++j){
-    //             str = to_string(cus) + "." + to_string(area[i]) + "." + to_string(j);
-    //             init(str);
-    //             BT_Truck(0, 0, 0);
-    //         }
-    //     }
-    // }
+    read_param("params.csv");
+    int num_cus[5] = {6, 10, 12, 20, 50};
+    int area[5] = {5, 10, 20, 30, 40};
+    string str;
+    for (auto cus: num_cus){
+        for (int i = cus < 50 ? 0 : 1; i < (cus < 50 ? 3 : 5); ++ i){
+            for (int j = 1; j < 5; ++j){
+                str = to_string(cus) + "." + to_string(area[i]) + "." + to_string(j);
+                cout << str << "\n";
+                init(str);
+                BT_Truck(0, 0, 0);
+            }
+        }
+    }
 
-    init("6.5.3");
-    BT_Truck(0, 0, 0);
+    // init("6.5.3");
+    // BT_Truck(0, 0, 0);
 
     return 0;
 }
