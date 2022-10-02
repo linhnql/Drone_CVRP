@@ -289,35 +289,47 @@ void check_customer(ofstream& file_check)
     }
 }
 
-void check_solution(ofstream& file_check, string file_name)
+void check_solution(ofstream& file_check, string solution_name)
 {
     for (int i = 1; i < n; ++i)
     {
         customer[i].delivered = 0;
     }
-    file_name = "./solution/" + file_name + ".txt";
+    string file_name = "./solution/" + solution_name + ".txt";
     std::ifstream file(file_name, std::ios_base::in);
+    if (!file.is_open()){
+        flag = 1;
+        cout << "Could not open the file\n";
+        return;
+    }
+    file_check << "\n"
+               << solution_name.c_str() << "\n";
     vector<string> lines;
     string line;
     getline(file, line);
 
     // check truck
-    int cnt = 1;
+    int cnt_truck = 1, cnt_drone;
     while (getline(file, line))
     {
         int length = line.length();
-        if (length > 1)  check_truck(file_check, line, cnt++);
+        if (length > 1)  check_truck(file_check, line, cnt_truck++);
         else
         {
-            M = stoi(line);
+            cnt_drone = stoi(line);
             break;
         }
     }
+    cnt_truck--;
+    if (cnt_truck > K)
+        flag = 1, file_check << "Violates NUMBER truck: " << cnt_truck << "\n";
 
+    if (cnt_drone > M)
+        flag = 1, file_check << "Violates NUMBER drone: " << cnt_drone << "\n";
     // check drone
     getline(file, line);
 
-    for (int i = 0; i < M; ++i)
+    for (int i = 0; i < cnt_drone; ++i)
     {
         // cout << "Drone " << i+1 << endl;
 
@@ -340,7 +352,7 @@ void check_solution(ofstream& file_check, string file_name)
 
 int main()
 {
-    string fname = "./solution/temp_check_solution.txt";
+    string fname = "./solution/one_solution.txt";
     ofstream outfile;
     outfile.open(fname, ios::out | ios::trunc);
     // loop check file
@@ -371,7 +383,6 @@ int main()
     //             drone_capacity = params[str].drone_capacity;
                 
     //             // file check 2 dòng cuối k cùng trống
-    //             outfile << "\n" << str.c_str() << "\n";
     //             check_solution(outfile, str);
     //             cout << str << " " << limited_time << endl;
     //             if (flag)
@@ -381,7 +392,7 @@ int main()
     //         }
     //     }
     // }
-    string test = "20.20.3";
+    string test = "20.5.3";
     read_test(test);
 
     read_param("params.csv");
@@ -396,7 +407,6 @@ int main()
     drone_capacity = params[test].drone_capacity;
 
     // outfile << test << "\n";
-    outfile << test.c_str() << "\n";
     check_solution(outfile, test);
     if (!flag)
         feasible++, outfile <<  "FEASIBLE SOLUTION\n";
@@ -404,6 +414,6 @@ int main()
 
     // outfile << "\nNumber feasible solution: " <<  feasible << "\n"; // 64 - not_feasible
     // outfile << "Number not feasible solution: " <<  not_feasible << "\n";
-    outfile.close();
+    // outfile.close();
     return 0;
 }
