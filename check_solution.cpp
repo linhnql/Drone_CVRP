@@ -339,69 +339,69 @@ void check_solution(ofstream& file_check, string file_name)
 
 int main()
 {
-    string fname = "./solution/check_solution.txt";
+    string fname = "./solution/temp_check_solution.txt";
     ofstream outfile;
     outfile.open(fname, ios::out | ios::trunc);
     // loop check file
     int not_feasible = 0;
     int feasible = 0;
-    int num_cus[5] = {6, 10, 12, 20, 50};
-    int area[5] = {5, 10, 20, 30, 40};
-    string str;
-
-    read_param("params.csv");
-    for (auto cus : num_cus)
-    {
-        for (int i = cus < 50 ? 0 : 1; i < (cus < 50 ? 3 : 5); ++i)
-        {
-            for (int j = 1; j < 5; ++j)
-            {
-                str = to_string(cus) + "." + to_string(area[i]) + "." + to_string(j);
-                read_test(str);
-
-                flag = 0;
-                K = params[str].K;
-                M = params[str].M;
-                truck_speed = params[str].truck_speed;
-                drone_speed = params[str].drone_speed;
-                drone_duration = params[str].drone_duration;
-                limited_time = params[str].limited_time;
-                truck_capacity = params[str].truck_capacity;
-                drone_capacity = params[str].drone_capacity;
-                
-                // file check 2 dòng cuối k cùng trống
-                outfile << "\n" << str.c_str() << "\n";
-                check_solution(outfile, str);
-                cout << str << " " << limited_time << endl;
-                if (flag)
-                    not_feasible++;
-                else
-                    feasible++, outfile << "FEASIBLE SOLUTION\n";
-            }
-        }
-    }
-    // string test = "6.5.1";
-    // read_test(test);
+    // int num_cus[5] = {6, 10, 12, 20, 50};
+    // int area[5] = {5, 10, 20, 30, 40};
+    // string str;
 
     // read_param("params.csv");
-    // K = params[test].K;
-    // M = params[test].M;
-    // truck_speed = params[test].truck_speed;
-    // drone_speed = params[test].drone_speed;
-    // drone_duration = params[test].drone_duration;
-    // limited_time = params[test].limited_time;
-    // truck_capacity = params[test].truck_capacity;
-    // drone_capacity = params[test].drone_capacity;
+    // for (auto cus : num_cus)
+    // {
+    //     for (int i = cus < 50 ? 0 : 1; i < (cus < 50 ? 3 : 5); ++i)
+    //     {
+    //         for (int j = 1; j < 5; ++j)
+    //         {
+    //             str = to_string(cus) + "." + to_string(area[i]) + "." + to_string(j);
+    //             read_test(str);
 
-    // // outfile << test << "\n";
-    // outfile << test.c_str() << "\n";
-    // check_solution(outfile, test);
-    // if (!flag)
-    //     feasible++, outfile <<  "FEASIBLE SOLUTION\n\n");
-    // else not_feasible++;
+    //             flag = 0;
+    //             K = params[str].K;
+    //             M = params[str].M;
+    //             truck_speed = params[str].truck_speed;
+    //             drone_speed = params[str].drone_speed;
+    //             drone_duration = params[str].drone_duration;
+    //             limited_time = params[str].limited_time;
+    //             truck_capacity = params[str].truck_capacity;
+    //             drone_capacity = params[str].drone_capacity;
+                
+    //             // file check 2 dòng cuối k cùng trống
+    //             outfile << "\n" << str.c_str() << "\n";
+    //             check_solution(outfile, str);
+    //             cout << str << " " << limited_time << endl;
+    //             if (flag)
+    //                 not_feasible++;
+    //             else
+    //                 feasible++, outfile << "FEASIBLE SOLUTION\n";
+    //         }
+    //     }
+    // }
+    string test = "20.20.3";
+    read_test(test);
 
-    outfile << "\nNumber feasible solution: " <<  feasible << "\n"; // 64 - not_feasible
-    outfile << "Number not feasible solution: " <<  not_feasible << "\n";
+    read_param("params.csv");
+    K = params[test].K;
+    M = params[test].M;
+    truck_speed = params[test].truck_speed;
+    drone_speed = params[test].drone_speed;
+    drone_duration = params[test].drone_duration;
+    limited_time = params[test].limited_time;
+    truck_capacity = params[test].truck_capacity;
+    drone_capacity = params[test].drone_capacity;
+
+    // outfile << test << "\n";
+    outfile << test.c_str() << "\n";
+    check_solution(outfile, test);
+    if (!flag)
+        feasible++, outfile <<  "FEASIBLE SOLUTION\n";
+    else not_feasible++;
+
+    // outfile << "\nNumber feasible solution: " <<  feasible << "\n"; // 64 - not_feasible
+    // outfile << "Number not feasible solution: " <<  not_feasible << "\n";
     outfile.close();
     return 0;
 }
