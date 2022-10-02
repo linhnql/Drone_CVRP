@@ -18,9 +18,9 @@ typedef struct drone__
     double total_time;
     double process_time;
     int route;
-    double route_time[10];
-    int cus_amount[10][100]; // lượng hàng drone i trong hành trình j giao cho khách k
-    int flag[100];
+    double route_time[200];
+    int cus_amount[200][200]; // lượng hàng drone i trong hành trình j giao cho khách k
+    int flag[200];
 } drone__;
 
 typedef struct customer__
@@ -104,7 +104,7 @@ void read_test(string file_name)
         customer[i].weight = stoi(content[i][5]);
     }
     file.close();
-
+    
     for (int i = 0; i < n; ++i)
     {
         vector<double> temp;
@@ -207,18 +207,22 @@ void check_truck(ofstream& file_check, string line, int num_truck)
         truck_trip.push_back(n);
     }
 
-    set<int> check_flag;
-    check_flag.insert(truck_trip[0]);
+    set<int> check_cus;
+    check_cus.insert(truck_trip[0]);
     double distance = matrix_dist[0][truck_trip[0]];
     int count_cus = start_load - 1;
     for (int j = 1; j < count_cus; ++j)
     {
-        check_flag.insert(truck_trip[j]);
+        cout << j << " " << matrix_dist[truck_trip[j - 1]][truck_trip[j]] << "\n";
+        check_cus.insert(truck_trip[j]);
         distance += matrix_dist[truck_trip[j - 1]][truck_trip[j]];
     }
-    // cout << "distance: " << distance << endl;
-    if (check_flag.size() < count_cus)
-        flag = 1, file_check << "Truck " << num_truck << " violates delivered customer GREATER than ONCE\n";
+    distance += matrix_dist[truck_trip[count_cus - 1]][0];
+        // cout << "distance: " << distance << endl;
+    if (check_cus.size() < count_cus)
+        flag = 1,
+        file_check << "Truck " << num_truck << " violates delivered customer GREATER than ONCE\n";
+    // cout << line << " " << count_cus << " " << distance << " " << truck_speed << endl;
     double working_time = distance / truck_speed;
     cout.precision(4);
     if (working_time > limited_time)
@@ -240,19 +244,21 @@ double check_drone_router(ofstream& file_check, string line, int num_drone, int 
     int start_router = 0, cnt = 0;
     vector<int> drone_trip = get_router(line, start_router, cnt);
 
-    set<int> check_flag;
-    check_flag.insert(drone_trip[0]);
+    set<int> check_cus;
+    check_cus.insert(drone_trip[0]);
     double router_dis = matrix_dist[0][drone_trip[0]];
     int count_cus = start_router - 1;
     for (int j = 1; j < count_cus; ++j)
     {
-        check_flag.insert(drone_trip[j]);
+        check_cus.insert(drone_trip[j]);
         router_dis += matrix_dist[drone_trip[j - 1]][drone_trip[j]];
     }
     // cout << "router_dis: " << router_dis << endl;
-    if (check_flag.size() < count_cus)
+    if (check_cus.size() < count_cus)
         flag = 1, file_check << "Drone " << num_drone << " delivered customer GREATER than ONCE in router " << router << "\n";
     double router_time = router_dis / drone_speed;
+    router_dis += matrix_dist[drone_trip[count_cus - 1]][0];
+
     if (router_time > drone_duration)
         flag = 1, file_check << "Drone "<< num_drone << " violates DURATION in router " << router << ": " << router_time << "\n";
 
@@ -296,21 +302,16 @@ void check_solution(ofstream& file_check, string file_name)
     getline(file, line);
 
     // check truck
-    int i = 1;
+    int cnt = 1;
     while (getline(file, line))
     {
         int length = line.length();
-        if (length > 1)
-        {
-            check_truck(file_check, line, i++);
-        }
-        else if (length == 1)
+        if (length > 1)  check_truck(file_check, line, cnt++);
+        else
         {
             M = stoi(line);
             break;
         }
-        else
-            return; // exit(0);
     }
 
     // check drone
@@ -384,6 +385,7 @@ int main()
     read_test(test);
 
     read_param("params.csv");
+    flag = 0;
     K = params[test].K;
     M = params[test].M;
     truck_speed = params[test].truck_speed;
