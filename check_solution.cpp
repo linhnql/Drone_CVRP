@@ -395,7 +395,7 @@ int main()
     //     feasible++, fprintf(outfile, "FEASIBLE SOLUTION\n\n");
     // else not_feasible++;
 
-    fprintf(outfile, "Number feasible solution: %d\n", feasible);
+    fprintf(outfile, "Number feasible solution: %d\n", feasible); // 64 - not_feasible
     fprintf(outfile, "Number not feasible solution: %d\n", not_feasible);
     fclose(outfile);
     return 0;
