@@ -229,7 +229,7 @@ bool compare(pair<double, int> &x, pair<double, int> &y)
 vector<pair<double, int>> select_customer_truck(int k, int num)
 {
     vector<pair<double, int>> rate;
-    for (int i = 0; i < n; ++i)
+    for (int i = 1; i < n; ++i)
     {
         if (i == k)
             rate.push_back({0, i});
@@ -237,8 +237,8 @@ vector<pair<double, int>> select_customer_truck(int k, int num)
             rate.push_back({(customer[i].weight * (customer[i].low + customer[i].upper) / 2) / matrix_dist[k][i], i});
     }
 
-    int deleted = 0;
-    for (int i = 0; i < n; ++i)
+    int deleted = 1;
+    for (int i = 1; i < n; ++i)
     {
         if (customer[i].delivered == customer[i].upper)
         {
@@ -276,7 +276,7 @@ vector<drone_rate> select_customer_drone(int k, int num)
 {
     vector<drone_rate> rate;
     drone[num].flag_duration = 0;
-    for (int i = 0; i < n; ++i)
+    for (int i = 1; i < n; ++i)
     {
         drone_rate addRate;
         addRate.idx = i;
@@ -284,11 +284,11 @@ vector<drone_rate> select_customer_drone(int k, int num)
         addRate.to_low = customer[i].delivered - customer[i].low;
         rate.push_back(addRate);
     }
-    int deleted = 0;
+    int deleted = 1;
     bool done = true;
     bool limited = false;
     bool process = false;
-    for (int i = 0; i < n; ++i)
+    for (int i = 1; i < n; ++i)
     {
         if (customer[i].delivered == customer[i].upper)
         {
@@ -302,7 +302,7 @@ vector<drone_rate> select_customer_drone(int k, int num)
         }
         if (customer[i].drone_flag[num] == 1)
         {
-            if (customer[i].delivered < customer[i].upper)
+            if (customer[i].delivered < customer[i].upper && drone_duration < (matrix_dist[0][i] + matrix_dist[i][0]) / drone_speed)
                 process = true;
             rate.erase(rate.begin() + i - deleted);
             deleted++;
@@ -492,7 +492,7 @@ void BT_Truck(int j, int idx, int route_idx)
     truck[j].cus_amount[idx] = delivered;
 
     vector<pair<double, int>> rateArr = select_customer_truck(idx, j);
-    if (rateArr.size() == 0)
+    if (rateArr.size() == 0 || truck[j].load == 0)
     {
         BT_Truck(j + 1, 0, 0);
     }
@@ -527,7 +527,7 @@ int main()
     //     }
     // }
 
-    init("10.5.1");
+    init("20.5.1");
     BT_Truck(0, 0, 0);
 
     return 0;
