@@ -384,7 +384,6 @@ void print_solution()
         outfile << i + 1 << "\n";
         for (int ct = 0; ct <= drone[i].count_route; ct++)
         {
-            cout << drone[i].total_route[ct];
             for (int j = 1; j < drone[i].total_route[ct]; ++j)
             {
                 outfile << drone[i].route[j][ct] << " ";
@@ -528,7 +527,7 @@ int main()
     //     }
     // }
 
-    init("20.5.1");
+    init("50.10.2");
     BT_Truck(0, 0, 0);
 
     return 0;
