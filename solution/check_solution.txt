@@ -1,0 +1,5 @@
+6.5.1
+FEASIBLE SOLUTION
+
+Number feasible solution: 1
+Number not feasible solution: 0
