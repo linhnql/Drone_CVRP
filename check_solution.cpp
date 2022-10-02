@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <stdlib.h>
 #include <algorithm>
 
 using namespace std;
@@ -191,7 +192,7 @@ vector<int> get_router(string line, int &start_load, int &cnt)
     return drone_trip;
 }
 
-void check_truck(FILE *file_check, string line, int num_truck)
+void check_truck(ofstream& file_check, string line, int num_truck)
 {
     std::istringstream iss(line);
     int start_load;
@@ -217,10 +218,11 @@ void check_truck(FILE *file_check, string line, int num_truck)
     }
     // cout << "distance: " << distance << endl;
     if (check_flag.size() < count_cus)
-        flag = 1, fprintf(file_check, "Truck %d violates delivered customer GREATER than ONCE\n", num_truck);
+        flag = 1, file_check << "Truck " << num_truck << " violates delivered customer GREATER than ONCE\n";
     double working_time = distance / truck_speed;
+    cout.precision(4);
     if (working_time > limited_time)
-        flag = 1, fprintf(file_check, "Truck %d violates WORKING TIME: %f\n", num_truck, working_time);
+        flag = 1, file_check << "Truck " << num_truck << " violates WORKING TIME: " << fixed << working_time << "\n";
 
     int load_truck = 0;
     for (int j = start_load; j < cnt; ++j)
@@ -230,10 +232,10 @@ void check_truck(FILE *file_check, string line, int num_truck)
     }
     // cout <<"load_truck: " << load_truck << endl;
     if (load_truck > truck_capacity)
-        flag = 1, fprintf(file_check, "Truck %d violates CAPACITY: %d\n", num_truck, load_truck);
+        flag = 1, file_check << "Truck " << num_truck << " violates CAPACITY: " << load_truck << "\n";
 }
 
-double check_drone_router(FILE *file_check, string line, int num_drone, int router)
+double check_drone_router(ofstream& file_check, string line, int num_drone, int router)
 {
     int start_router = 0, cnt = 0;
     vector<int> drone_trip = get_router(line, start_router, cnt);
@@ -249,10 +251,10 @@ double check_drone_router(FILE *file_check, string line, int num_drone, int rout
     }
     // cout << "router_dis: " << router_dis << endl;
     if (check_flag.size() < count_cus)
-        flag = 1, fprintf(file_check, "Drone %d delivered customer GREATER than ONCE in router %d\n", num_drone, router);
+        flag = 1, file_check << "Drone " << num_drone << " delivered customer GREATER than ONCE in router " << router << "\n";
     double router_time = router_dis / drone_speed;
     if (router_time > drone_duration)
-        flag = 1, fprintf(file_check, "Drone %d violates DURATION in router %d: %f\n", num_drone, router, router_time);
+        flag = 1, file_check << "Drone "<< num_drone << " violates DURATION in router " << router << ": " << router_time << "\n";
 
     int load_drone = 0;
     for (int j = start_router; j < cnt; ++j)
@@ -262,12 +264,12 @@ double check_drone_router(FILE *file_check, string line, int num_drone, int rout
     }
     // cout <<"load_drone: " << load_drone << endl;
     if (load_drone > drone_capacity)
-        flag = 1, fprintf(file_check, "Drone %d violates CAPACITY in router %d: %d\n", num_drone, router, load_drone);
+        flag = 1, file_check << "Drone " << num_drone << " violates CAPACITY in router " << router << ": " << load_drone << "\n";
 
     return router_dis;
 }
 
-void check_customer(FILE *file_check)
+void check_customer(ofstream& file_check)
 {
     // cout << "n: " << n << endl;
     for (int i = 1; i < n; ++i)
@@ -275,13 +277,13 @@ void check_customer(FILE *file_check)
         int amount = customer[i].delivered;
         // cout << amount << " " << customer[i].low << " " << customer[i].upper << endl;
         if (amount < customer[i].low)
-            flag = 1, fprintf(file_check, "Customer %d LESS than low: %d\n", i, amount);
+            flag = 1, file_check << "Customer " << i << " LESS than low: " << amount << "\n";
         if (amount > customer[i].upper)
-            flag = 1, fprintf(file_check, "Customer %d GREATER upper: %d\n", i, amount);
+            flag = 1, file_check << "Customer " << i << " GREATER upper: " << amount << "\n";
     }
 }
 
-void check_solution(FILE *file_check, string file_name)
+void check_solution(ofstream& file_check, string file_name)
 {
     for (int i = 1; i < n; ++i)
     {
@@ -328,15 +330,18 @@ void check_solution(FILE *file_check, string file_name)
         }
         double total_time = total_dis / drone_speed;
         // cout << "total_time drone: " << i << " " << total_time << endl;
+        cout.precision(4);
         if (total_time > limited_time)
-            flag = 1, fprintf(file_check, "Drone %d violates working time: %f\n", i + 1, total_time);
+            flag = 1, file_check<< "Drone " << i+1 <<" violates WORKING TIME: " << fixed << total_time << "\n";
     }
     check_customer(file_check);
 }
 
 int main()
 {
-    FILE *outfile = fopen("./solution/check_solution.txt", "w");
+    string fname = "./solution/check_solution.txt";
+    ofstream outfile;
+    outfile.open(fname, ios::out | ios::trunc);
     // loop check file
     int not_feasible = 0;
     int feasible = 0;
@@ -352,7 +357,6 @@ int main()
             for (int j = 1; j < 5; ++j)
             {
                 str = to_string(cus) + "." + to_string(area[i]) + "." + to_string(j);
-                cout << str;
                 read_test(str);
 
                 flag = 0;
@@ -364,14 +368,15 @@ int main()
                 limited_time = params[str].limited_time;
                 truck_capacity = params[str].truck_capacity;
                 drone_capacity = params[str].drone_capacity;
-
+                
                 // file check 2 dòng cuối k cùng trống
-                fprintf(outfile, "%s\n", str.c_str());
+                outfile << "\n" << str.c_str() << "\n";
                 check_solution(outfile, str);
+                cout << str << " " << limited_time << endl;
                 if (flag)
                     not_feasible++;
                 else
-                    feasible++, fprintf(outfile, "FEASIBLE SOLUTION\n");
+                    feasible++, outfile << "FEASIBLE SOLUTION\n";
             }
         }
     }
@@ -389,14 +394,14 @@ int main()
     // drone_capacity = params[test].drone_capacity;
 
     // // outfile << test << "\n";
-    // fprintf(outfile, "%s\n", test.c_str());
+    // outfile << test.c_str() << "\n";
     // check_solution(outfile, test);
     // if (!flag)
-    //     feasible++, fprintf(outfile, "FEASIBLE SOLUTION\n\n");
+    //     feasible++, outfile <<  "FEASIBLE SOLUTION\n\n");
     // else not_feasible++;
 
-    fprintf(outfile, "Number feasible solution: %d\n", feasible); // 64 - not_feasible
-    fprintf(outfile, "Number not feasible solution: %d\n", not_feasible);
-    fclose(outfile);
+    outfile << "\nNumber feasible solution: " <<  feasible << "\n"; // 64 - not_feasible
+    outfile << "Number not feasible solution: " <<  not_feasible << "\n";
+    outfile.close();
     return 0;
 }

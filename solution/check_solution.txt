@@ -1,5 +1,859 @@
+Number feasible solution: 39
+Number not feasible solution: 25
+
 6.5.1
 FEASIBLE SOLUTION
 
-Number feasible solution: 1
-Number not feasible solution: 0
+6.5.2
+FEASIBLE SOLUTION
+
+6.5.3
+FEASIBLE SOLUTION
+
+6.5.4
+FEASIBLE SOLUTION
+
+6.10.1
+FEASIBLE SOLUTION
+
+6.10.2
+FEASIBLE SOLUTION
+
+6.10.3
+FEASIBLE SOLUTION
+
+6.10.4
+FEASIBLE SOLUTION
+
+6.20.1
+FEASIBLE SOLUTION
+
+6.20.2
+FEASIBLE SOLUTION
+
+6.20.3
+FEASIBLE SOLUTION
+
+6.20.4
+FEASIBLE SOLUTION
+
+10.5.1
+FEASIBLE SOLUTION
+
+10.5.2
+FEASIBLE SOLUTION
+
+10.5.3
+FEASIBLE SOLUTION
+
+10.5.4
+FEASIBLE SOLUTION
+
+10.10.1
+FEASIBLE SOLUTION
+
+10.10.2
+FEASIBLE SOLUTION
+
+10.10.3
+FEASIBLE SOLUTION
+
+10.10.4
+FEASIBLE SOLUTION
+
+10.20.1
+FEASIBLE SOLUTION
+
+10.20.2
+FEASIBLE SOLUTION
+
+10.20.3
+FEASIBLE SOLUTION
+
+10.20.4
+FEASIBLE SOLUTION
+
+12.5.1
+FEASIBLE SOLUTION
+
+12.5.2
+Truck 1 violates WORKING TIME: 799278138570353.375000
+
+12.5.3
+FEASIBLE SOLUTION
+
+12.5.4
+FEASIBLE SOLUTION
+
+12.10.1
+FEASIBLE SOLUTION
+
+12.10.2
+FEASIBLE SOLUTION
+
+12.10.3
+FEASIBLE SOLUTION
+
+12.10.4
+Truck 1 violates WORKING TIME: 85698317791418978538216775241030985273953654170885558593014923575867748255967364380285301777485592742635521241603880288480653306162513361698142420138374449678032476630794425597952.000000
+
+12.20.1
+Truck 2 violates WORKING TIME: 85698317791418978538216775241030985273953654170885558593014923575867748255967364380285301777485592742635521241603880288480653306162513361698142420138374449678032476630794425597952.000000
+
+12.20.2
+FEASIBLE SOLUTION
+
+12.20.3
+FEASIBLE SOLUTION
+
+12.20.4
+FEASIBLE SOLUTION
+
+20.5.1
+Truck 1 violates WORKING TIME: 799278138570353.250000
+Truck 2 violates WORKING TIME: 799278138570353.250000
+
+20.5.2
+FEASIBLE SOLUTION
+
+20.5.3
+FEASIBLE SOLUTION
+
+20.5.4
+FEASIBLE SOLUTION
+
+20.10.1
+Drone 1 violates DURATION in router 29: 163612726204134435028398714550905770489394104006090075809572261995464131866493547348208782811621543937085642997075661966224179738584729893870116818551382243613216495588682722963690257612535945757207565586881298967487849248685381120950673754230165078016.000000
+Drone 1 violates WORKING TIME: 163612726204134435028398714550905770489394104006090075809572261995464131866493547348208782811621543937085642997075661966224179738584729893870116818551382243613216495588682722963690257612535945757207565586881298967487849248685381120950673754230165078016.000000
+
+20.10.2
+Truck 2 violates WORKING TIME: 7539485727510107762819522458940371275068537357566520165079169591747825058913627056220141409674198225080575466299966419414797232153588013703856194282689459650560.000000
+
+20.10.3
+Customer 2 LESS than low: 0
+Customer 3 LESS than low: 0
+Customer 4 LESS than low: 0
+Customer 5 LESS than low: 0
+Customer 6 LESS than low: 0
+Customer 7 LESS than low: 0
+Customer 8 LESS than low: 0
+Customer 9 LESS than low: 0
+Customer 10 LESS than low: 0
+Customer 11 LESS than low: 0
+Customer 12 LESS than low: 0
+Customer 13 LESS than low: 0
+Customer 14 LESS than low: 0
+Customer 15 LESS than low: 0
+Customer 16 LESS than low: 0
+Customer 18 LESS than low: 0
+Customer 19 LESS than low: 0
+Customer 20 LESS than low: 0
+
+20.10.4
+FEASIBLE SOLUTION
+
+20.20.1
+FEASIBLE SOLUTION
+
+20.20.2
+Truck 2 violates WORKING TIME: 85698317791418978538216775241030985273953654170885558593014923575867748255967364380285301777485592742635521241603880288480653306162513361698142420138374449678032476630794425597952.000000
+
+20.20.3
+Truck 2 violates WORKING TIME: 245419089306201652542598071826358655734091156009135113714358392993196197799740321022313174217432315905628464495613492949336269607877094840805175227827073365419824743383024084445535386418803918635811348380321948451231773873028071681426010631345247617024.000000
+Drone 1 violates DURATION in router 29: 532852092380235.437500
+Drone 1 violates WORKING TIME: 532852092380237.125000
+
+20.20.4
+FEASIBLE SOLUTION
+
+50.10.1
+Customer 2 LESS than low: 0
+Customer 4 LESS than low: 0
+Customer 5 LESS than low: 0
+Customer 6 LESS than low: 0
+Customer 7 LESS than low: 0
+Customer 8 LESS than low: 0
+Customer 11 LESS than low: 0
+Customer 12 LESS than low: 0
+Customer 13 LESS than low: 0
+Customer 16 LESS than low: 0
+Customer 17 LESS than low: 0
+Customer 18 LESS than low: 0
+Customer 20 LESS than low: 0
+Customer 21 LESS than low: 0
+Customer 22 LESS than low: 0
+Customer 23 LESS than low: 0
+Customer 24 LESS than low: 0
+Customer 25 LESS than low: 0
+Customer 26 LESS than low: 0
+Customer 27 LESS than low: 0
+Customer 28 LESS than low: 0
+Customer 29 LESS than low: 0
+Customer 30 LESS than low: 0
+Customer 31 LESS than low: 0
+Customer 32 LESS than low: 0
+Customer 33 LESS than low: 0
+Customer 34 LESS than low: 0
+Customer 35 LESS than low: 0
+Customer 36 LESS than low: 0
+Customer 37 LESS than low: 0
+Customer 40 LESS than low: 0
+Customer 41 LESS than low: 0
+Customer 42 LESS than low: 0
+Customer 43 LESS than low: 0
+Customer 44 LESS than low: 0
+Customer 45 LESS than low: 0
+Customer 46 LESS than low: 0
+Customer 47 LESS than low: 0
+Customer 48 LESS than low: 0
+Customer 49 LESS than low: 0
+Customer 50 LESS than low: 0
+
+50.10.2
+Customer 1 LESS than low: 0
+Customer 2 LESS than low: 0
+Customer 3 LESS than low: 0
+Customer 4 LESS than low: 0
+Customer 5 LESS than low: 0
+Customer 6 LESS than low: 0
+Customer 8 LESS than low: 0
+Customer 9 LESS than low: 0
+Customer 11 LESS than low: 0
+Customer 12 LESS than low: 0
+Customer 13 LESS than low: 0
+Customer 14 LESS than low: 0
+Customer 15 LESS than low: 0
+Customer 16 LESS than low: 0
+Customer 17 LESS than low: 0
+Customer 18 LESS than low: 0
+Customer 19 LESS than low: 0
+Customer 21 LESS than low: 0
+Customer 22 LESS than low: 0
+Customer 24 LESS than low: 0
+Customer 25 LESS than low: 0
+Customer 27 LESS than low: 0
+Customer 28 LESS than low: 0
+Customer 29 LESS than low: 0
+Customer 30 LESS than low: 0
+Customer 32 LESS than low: 0
+Customer 33 LESS than low: 0
+Customer 34 LESS than low: 0
+Customer 36 LESS than low: 0
+Customer 37 LESS than low: 0
+Customer 38 LESS than low: 0
+Customer 39 LESS than low: 0
+Customer 40 LESS than low: 0
+Customer 41 LESS than low: 0
+Customer 42 LESS than low: 0
+Customer 43 LESS than low: 0
+Customer 45 LESS than low: 0
+Customer 46 LESS than low: 0
+Customer 48 LESS than low: 0
+Customer 49 LESS than low: 0
+Customer 50 LESS than low: 0
+
+50.10.3
+Customer 1 LESS than low: 0
+Customer 2 LESS than low: 0
+Customer 3 LESS than low: 0
+Customer 4 LESS than low: 0
+Customer 5 LESS than low: 0
+Customer 7 LESS than low: 0
+Customer 8 LESS than low: 0
+Customer 9 LESS than low: 0
+Customer 10 LESS than low: 0
+Customer 11 LESS than low: 0
+Customer 13 LESS than low: 0
+Customer 14 LESS than low: 0
+Customer 15 LESS than low: 0
+Customer 16 LESS than low: 0
+Customer 17 LESS than low: 0
+Customer 18 LESS than low: 0
+Customer 19 LESS than low: 0
+Customer 20 LESS than low: 0
+Customer 21 LESS than low: 0
+Customer 22 LESS than low: 0
+Customer 23 LESS than low: 0
+Customer 24 LESS than low: 0
+Customer 25 LESS than low: 0
+Customer 27 LESS than low: 0
+Customer 29 LESS than low: 0
+Customer 31 LESS than low: 0
+Customer 33 LESS than low: 0
+Customer 34 LESS than low: 0
+Customer 36 LESS than low: 0
+Customer 37 LESS than low: 0
+Customer 38 LESS than low: 0
+Customer 40 LESS than low: 0
+Customer 42 LESS than low: 0
+Customer 43 LESS than low: 0
+Customer 44 LESS than low: 0
+Customer 45 LESS than low: 0
+Customer 46 LESS than low: 0
+Customer 47 LESS than low: 0
+Customer 48 LESS than low: 0
+Customer 49 LESS than low: 0
+Customer 50 LESS than low: 0
+
+50.10.4
+Customer 1 LESS than low: 0
+Customer 2 LESS than low: 0
+Customer 3 LESS than low: 0
+Customer 4 LESS than low: 0
+Customer 5 LESS than low: 0
+Customer 6 LESS than low: 0
+Customer 7 LESS than low: 0
+Customer 8 LESS than low: 0
+Customer 14 LESS than low: 0
+Customer 15 LESS than low: 0
+Customer 16 LESS than low: 0
+Customer 17 LESS than low: 0
+Customer 18 LESS than low: 0
+Customer 19 LESS than low: 0
+Customer 20 LESS than low: 0
+Customer 21 LESS than low: 0
+Customer 24 LESS than low: 0
+Customer 25 LESS than low: 0
+Customer 26 LESS than low: 0
+Customer 27 LESS than low: 0
+Customer 28 LESS than low: 0
+Customer 30 LESS than low: 0
+Customer 31 LESS than low: 0
+Customer 32 LESS than low: 0
+Customer 33 LESS than low: 0
+Customer 34 LESS than low: 0
+Customer 35 LESS than low: 0
+Customer 36 LESS than low: 0
+Customer 37 LESS than low: 0
+Customer 39 LESS than low: 0
+Customer 40 LESS than low: 0
+Customer 41 LESS than low: 0
+Customer 42 LESS than low: 0
+Customer 43 LESS than low: 0
+Customer 44 LESS than low: 0
+Customer 45 LESS than low: 0
+Customer 46 LESS than low: 0
+Customer 47 LESS than low: 0
+Customer 48 LESS than low: 0
+Customer 49 LESS than low: 0
+Customer 50 LESS than low: 0
+
+50.20.1
+Customer 1 LESS than low: 0
+Customer 2 LESS than low: 0
+Customer 3 LESS than low: 0
+Customer 4 LESS than low: 0
+Customer 5 LESS than low: 0
+Customer 6 LESS than low: 0
+Customer 7 LESS than low: 0
+Customer 10 LESS than low: 0
+Customer 11 LESS than low: 0
+Customer 13 LESS than low: 0
+Customer 15 LESS than low: 0
+Customer 16 LESS than low: 0
+Customer 17 LESS than low: 0
+Customer 19 LESS than low: 0
+Customer 20 LESS than low: 0
+Customer 21 LESS than low: 0
+Customer 23 LESS than low: 0
+Customer 24 LESS than low: 0
+Customer 26 LESS than low: 0
+Customer 27 LESS than low: 0
+Customer 29 LESS than low: 0
+Customer 31 LESS than low: 0
+Customer 32 LESS than low: 0
+Customer 34 LESS than low: 0
+Customer 35 LESS than low: 0
+Customer 37 LESS than low: 0
+Customer 38 LESS than low: 0
+Customer 40 LESS than low: 0
+Customer 41 LESS than low: 0
+Customer 42 LESS than low: 0
+Customer 43 LESS than low: 0
+Customer 44 LESS than low: 0
+Customer 45 LESS than low: 0
+Customer 47 LESS than low: 0
+Customer 48 LESS than low: 0
+Customer 49 LESS than low: 0
+
+50.20.2
+Customer 1 LESS than low: 0
+Customer 2 LESS than low: 0
+Customer 3 LESS than low: 0
+Customer 4 LESS than low: 0
+Customer 5 LESS than low: 0
+Customer 6 LESS than low: 0
+Customer 7 LESS than low: 0
+Customer 8 LESS than low: 0
+Customer 10 LESS than low: 0
+Customer 11 LESS than low: 0
+Customer 12 LESS than low: 0
+Customer 13 LESS than low: 0
+Customer 14 LESS than low: 0
+Customer 15 LESS than low: 0
+Customer 16 LESS than low: 0
+Customer 18 LESS than low: 0
+Customer 19 LESS than low: 0
+Customer 21 LESS than low: 0
+Customer 22 LESS than low: 0
+Customer 23 LESS than low: 0
+Customer 25 LESS than low: 0
+Customer 26 LESS than low: 0
+Customer 27 LESS than low: 0
+Customer 28 LESS than low: 0
+Customer 30 LESS than low: 0
+Customer 31 LESS than low: 0
+Customer 32 LESS than low: 0
+Customer 33 LESS than low: 0
+Customer 34 LESS than low: 0
+Customer 35 LESS than low: 0
+Customer 37 LESS than low: 0
+Customer 39 LESS than low: 0
+Customer 40 LESS than low: 0
+Customer 42 LESS than low: 0
+Customer 43 LESS than low: 0
+Customer 44 LESS than low: 0
+Customer 46 LESS than low: 0
+Customer 47 LESS than low: 0
+Customer 48 LESS than low: 0
+Customer 49 LESS than low: 0
+Customer 50 LESS than low: 0
+
+50.20.3
+Customer 1 LESS than low: 0
+Customer 2 LESS than low: 0
+Customer 3 LESS than low: 0
+Customer 4 LESS than low: 0
+Customer 5 LESS than low: 0
+Customer 6 LESS than low: 0
+Customer 8 LESS than low: 0
+Customer 9 LESS than low: 0
+Customer 11 LESS than low: 0
+Customer 13 LESS than low: 0
+Customer 14 LESS than low: 0
+Customer 16 LESS than low: 0
+Customer 17 LESS than low: 0
+Customer 18 LESS than low: 0
+Customer 19 LESS than low: 0
+Customer 20 LESS than low: 0
+Customer 21 LESS than low: 0
+Customer 23 LESS than low: 0
+Customer 25 LESS than low: 0
+Customer 26 LESS than low: 0
+Customer 27 LESS than low: 0
+Customer 28 LESS than low: 0
+Customer 29 LESS than low: 0
+Customer 30 LESS than low: 0
+Customer 32 LESS than low: 0
+Customer 33 LESS than low: 0
+Customer 34 LESS than low: 0
+Customer 35 LESS than low: 0
+Customer 36 LESS than low: 0
+Customer 37 LESS than low: 0
+Customer 38 LESS than low: 0
+Customer 41 LESS than low: 0
+Customer 42 LESS than low: 0
+Customer 44 LESS than low: 0
+Customer 45 LESS than low: 0
+Customer 46 LESS than low: 0
+Customer 47 LESS than low: 0
+Customer 48 LESS than low: 0
+Customer 49 LESS than low: 0
+Customer 50 LESS than low: 0
+
+50.20.4
+Customer 2 LESS than low: 0
+Customer 3 LESS than low: 0
+Customer 4 LESS than low: 0
+Customer 5 LESS than low: 0
+Customer 8 LESS than low: 0
+Customer 9 LESS than low: 0
+Customer 10 LESS than low: 0
+Customer 11 LESS than low: 0
+Customer 12 LESS than low: 0
+Customer 13 LESS than low: 0
+Customer 14 LESS than low: 0
+Customer 15 LESS than low: 0
+Customer 16 LESS than low: 0
+Customer 17 LESS than low: 0
+Customer 18 LESS than low: 0
+Customer 19 LESS than low: 0
+Customer 20 LESS than low: 0
+Customer 21 LESS than low: 0
+Customer 22 LESS than low: 0
+Customer 23 LESS than low: 0
+Customer 24 LESS than low: 0
+Customer 25 LESS than low: 0
+Customer 26 LESS than low: 0
+Customer 28 LESS than low: 0
+Customer 29 LESS than low: 0
+Customer 30 LESS than low: 0
+Customer 31 LESS than low: 0
+Customer 32 LESS than low: 0
+Customer 33 LESS than low: 0
+Customer 34 LESS than low: 0
+Customer 37 LESS than low: 0
+Customer 38 LESS than low: 0
+Customer 41 LESS than low: 0
+Customer 42 LESS than low: 0
+Customer 43 LESS than low: 0
+Customer 44 LESS than low: 0
+Customer 45 LESS than low: 0
+Customer 47 LESS than low: 0
+Customer 48 LESS than low: 0
+Customer 49 LESS than low: 0
+Customer 50 LESS than low: 0
+
+50.30.1
+Customer 1 LESS than low: 0
+Customer 2 LESS than low: 0
+Customer 3 LESS than low: 0
+Customer 4 LESS than low: 0
+Customer 5 LESS than low: 0
+Customer 6 LESS than low: 0
+Customer 7 LESS than low: 0
+Customer 8 LESS than low: 0
+Customer 9 LESS than low: 0
+Customer 10 LESS than low: 0
+Customer 11 LESS than low: 0
+Customer 12 LESS than low: 0
+Customer 13 LESS than low: 0
+Customer 14 LESS than low: 0
+Customer 15 LESS than low: 0
+Customer 16 LESS than low: 0
+Customer 18 LESS than low: 0
+Customer 19 LESS than low: 0
+Customer 20 LESS than low: 0
+Customer 21 LESS than low: 0
+Customer 23 LESS than low: 0
+Customer 24 LESS than low: 0
+Customer 25 LESS than low: 0
+Customer 26 LESS than low: 0
+Customer 27 LESS than low: 0
+Customer 28 LESS than low: 0
+Customer 29 LESS than low: 0
+Customer 30 LESS than low: 0
+Customer 32 LESS than low: 0
+Customer 33 LESS than low: 0
+Customer 34 LESS than low: 0
+Customer 35 LESS than low: 0
+Customer 36 LESS than low: 0
+Customer 38 LESS than low: 0
+Customer 39 LESS than low: 0
+Customer 40 LESS than low: 0
+Customer 41 LESS than low: 0
+Customer 42 LESS than low: 0
+Customer 43 LESS than low: 0
+Customer 44 LESS than low: 0
+Customer 45 LESS than low: 0
+Customer 46 LESS than low: 0
+Customer 47 LESS than low: 0
+Customer 49 LESS than low: 0
+Customer 50 LESS than low: 0
+
+50.30.2
+Customer 1 LESS than low: 0
+Customer 2 LESS than low: 0
+Customer 3 LESS than low: 0
+Customer 4 LESS than low: 0
+Customer 5 LESS than low: 0
+Customer 6 LESS than low: 0
+Customer 8 LESS than low: 0
+Customer 9 LESS than low: 0
+Customer 10 LESS than low: 0
+Customer 11 LESS than low: 0
+Customer 12 LESS than low: 0
+Customer 13 LESS than low: 0
+Customer 14 LESS than low: 0
+Customer 15 LESS than low: 0
+Customer 16 LESS than low: 0
+Customer 17 LESS than low: 0
+Customer 18 LESS than low: 0
+Customer 19 LESS than low: 0
+Customer 20 LESS than low: 0
+Customer 21 LESS than low: 0
+Customer 22 LESS than low: 0
+Customer 23 LESS than low: 0
+Customer 26 LESS than low: 0
+Customer 27 LESS than low: 0
+Customer 28 LESS than low: 0
+Customer 29 LESS than low: 0
+Customer 30 LESS than low: 0
+Customer 31 LESS than low: 0
+Customer 32 LESS than low: 0
+Customer 33 LESS than low: 0
+Customer 34 LESS than low: 0
+Customer 36 LESS than low: 0
+Customer 37 LESS than low: 0
+Customer 39 LESS than low: 0
+Customer 41 LESS than low: 0
+Customer 42 LESS than low: 0
+Customer 43 LESS than low: 0
+Customer 44 LESS than low: 0
+Customer 45 LESS than low: 0
+Customer 46 LESS than low: 0
+Customer 47 LESS than low: 0
+Customer 48 LESS than low: 0
+Customer 49 LESS than low: 0
+Customer 50 LESS than low: 0
+
+50.30.3
+Customer 1 LESS than low: 0
+Customer 2 LESS than low: 0
+Customer 4 LESS than low: 0
+Customer 5 LESS than low: 0
+Customer 6 LESS than low: 0
+Customer 7 LESS than low: 0
+Customer 8 LESS than low: 0
+Customer 9 LESS than low: 0
+Customer 10 LESS than low: 0
+Customer 11 LESS than low: 0
+Customer 12 LESS than low: 0
+Customer 13 LESS than low: 0
+Customer 14 LESS than low: 0
+Customer 15 LESS than low: 0
+Customer 16 LESS than low: 0
+Customer 17 LESS than low: 0
+Customer 18 LESS than low: 0
+Customer 19 LESS than low: 0
+Customer 20 LESS than low: 0
+Customer 22 LESS than low: 0
+Customer 23 LESS than low: 0
+Customer 24 LESS than low: 0
+Customer 25 LESS than low: 0
+Customer 26 LESS than low: 0
+Customer 27 LESS than low: 0
+Customer 28 LESS than low: 0
+Customer 30 LESS than low: 0
+Customer 31 LESS than low: 0
+Customer 32 LESS than low: 0
+Customer 33 LESS than low: 0
+Customer 34 LESS than low: 0
+Customer 35 LESS than low: 0
+Customer 36 LESS than low: 0
+Customer 38 LESS than low: 0
+Customer 39 LESS than low: 0
+Customer 40 LESS than low: 0
+Customer 41 LESS than low: 0
+Customer 42 LESS than low: 0
+Customer 43 LESS than low: 0
+Customer 45 LESS than low: 0
+Customer 46 LESS than low: 0
+Customer 47 LESS than low: 0
+Customer 48 LESS than low: 0
+Customer 49 LESS than low: 0
+
+50.30.4
+Customer 1 LESS than low: 0
+Customer 2 LESS than low: 0
+Customer 3 LESS than low: 0
+Customer 4 LESS than low: 0
+Customer 5 LESS than low: 0
+Customer 7 LESS than low: 0
+Customer 8 LESS than low: 0
+Customer 10 LESS than low: 0
+Customer 12 LESS than low: 0
+Customer 13 LESS than low: 0
+Customer 14 LESS than low: 0
+Customer 15 LESS than low: 0
+Customer 17 LESS than low: 0
+Customer 18 LESS than low: 0
+Customer 19 LESS than low: 0
+Customer 20 LESS than low: 0
+Customer 21 LESS than low: 0
+Customer 22 LESS than low: 0
+Customer 23 LESS than low: 0
+Customer 24 LESS than low: 0
+Customer 25 LESS than low: 0
+Customer 26 LESS than low: 0
+Customer 27 LESS than low: 0
+Customer 29 LESS than low: 0
+Customer 30 LESS than low: 0
+Customer 31 LESS than low: 0
+Customer 32 LESS than low: 0
+Customer 34 LESS than low: 0
+Customer 35 LESS than low: 0
+Customer 36 LESS than low: 0
+Customer 37 LESS than low: 0
+Customer 38 LESS than low: 0
+Customer 39 LESS than low: 0
+Customer 40 LESS than low: 0
+Customer 41 LESS than low: 0
+Customer 42 LESS than low: 0
+Customer 43 LESS than low: 0
+Customer 44 LESS than low: 0
+Customer 45 LESS than low: 0
+Customer 46 LESS than low: 0
+Customer 47 LESS than low: 0
+Customer 48 LESS than low: 0
+Customer 49 LESS than low: 0
+Customer 50 LESS than low: 0
+
+50.40.1
+Customer 1 LESS than low: 0
+Customer 2 LESS than low: 0
+Customer 3 LESS than low: 0
+Customer 4 LESS than low: 0
+Customer 5 LESS than low: 0
+Customer 6 LESS than low: 0
+Customer 7 LESS than low: 0
+Customer 8 LESS than low: 0
+Customer 9 LESS than low: 0
+Customer 11 LESS than low: 0
+Customer 12 LESS than low: 0
+Customer 13 LESS than low: 0
+Customer 14 LESS than low: 0
+Customer 15 LESS than low: 0
+Customer 16 LESS than low: 0
+Customer 17 LESS than low: 0
+Customer 18 LESS than low: 0
+Customer 19 LESS than low: 0
+Customer 20 LESS than low: 0
+Customer 21 LESS than low: 0
+Customer 24 LESS than low: 0
+Customer 25 LESS than low: 0
+Customer 26 LESS than low: 0
+Customer 28 LESS than low: 0
+Customer 29 LESS than low: 0
+Customer 30 LESS than low: 0
+Customer 31 LESS than low: 0
+Customer 32 LESS than low: 0
+Customer 33 LESS than low: 0
+Customer 35 LESS than low: 0
+Customer 36 LESS than low: 0
+Customer 37 LESS than low: 0
+Customer 38 LESS than low: 0
+Customer 39 LESS than low: 0
+Customer 41 LESS than low: 0
+Customer 42 LESS than low: 0
+Customer 44 LESS than low: 0
+Customer 46 LESS than low: 0
+Customer 47 LESS than low: 0
+Customer 49 LESS than low: 0
+Customer 50 LESS than low: 0
+
+50.40.2
+Customer 1 LESS than low: 0
+Customer 2 LESS than low: 0
+Customer 3 LESS than low: 0
+Customer 4 LESS than low: 0
+Customer 5 LESS than low: 0
+Customer 6 LESS than low: 0
+Customer 7 LESS than low: 0
+Customer 10 LESS than low: 0
+Customer 11 LESS than low: 0
+Customer 12 LESS than low: 0
+Customer 13 LESS than low: 0
+Customer 14 LESS than low: 0
+Customer 15 LESS than low: 0
+Customer 16 LESS than low: 0
+Customer 17 LESS than low: 0
+Customer 18 LESS than low: 0
+Customer 19 LESS than low: 0
+Customer 20 LESS than low: 0
+Customer 21 LESS than low: 0
+Customer 22 LESS than low: 0
+Customer 24 LESS than low: 0
+Customer 26 LESS than low: 0
+Customer 27 LESS than low: 0
+Customer 28 LESS than low: 0
+Customer 29 LESS than low: 0
+Customer 30 LESS than low: 0
+Customer 31 LESS than low: 0
+Customer 33 LESS than low: 0
+Customer 34 LESS than low: 0
+Customer 35 LESS than low: 0
+Customer 37 LESS than low: 0
+Customer 39 LESS than low: 0
+Customer 40 LESS than low: 0
+Customer 41 LESS than low: 0
+Customer 42 LESS than low: 0
+Customer 43 LESS than low: 0
+Customer 44 LESS than low: 0
+Customer 45 LESS than low: 0
+Customer 46 LESS than low: 0
+Customer 48 LESS than low: 0
+Customer 50 LESS than low: 0
+
+50.40.3
+Customer 1 LESS than low: 0
+Customer 2 LESS than low: 0
+Customer 3 LESS than low: 0
+Customer 4 LESS than low: 0
+Customer 5 LESS than low: 0
+Customer 6 LESS than low: 0
+Customer 7 LESS than low: 0
+Customer 8 LESS than low: 0
+Customer 10 LESS than low: 0
+Customer 11 LESS than low: 0
+Customer 12 LESS than low: 0
+Customer 14 LESS than low: 0
+Customer 15 LESS than low: 0
+Customer 17 LESS than low: 0
+Customer 18 LESS than low: 0
+Customer 19 LESS than low: 0
+Customer 20 LESS than low: 0
+Customer 22 LESS than low: 0
+Customer 23 LESS than low: 0
+Customer 24 LESS than low: 0
+Customer 25 LESS than low: 0
+Customer 26 LESS than low: 0
+Customer 27 LESS than low: 0
+Customer 28 LESS than low: 0
+Customer 29 LESS than low: 0
+Customer 30 LESS than low: 0
+Customer 31 LESS than low: 0
+Customer 33 LESS than low: 0
+Customer 34 LESS than low: 0
+Customer 36 LESS than low: 0
+Customer 37 LESS than low: 0
+Customer 40 LESS than low: 0
+Customer 41 LESS than low: 0
+Customer 43 LESS than low: 0
+Customer 44 LESS than low: 0
+Customer 45 LESS than low: 0
+Customer 47 LESS than low: 0
+Customer 49 LESS than low: 0
+Customer 50 LESS than low: 0
+
+50.40.4
+Customer 1 LESS than low: 0
+Customer 2 LESS than low: 0
+Customer 3 LESS than low: 0
+Customer 4 LESS than low: 0
+Customer 5 LESS than low: 0
+Customer 7 LESS than low: 0
+Customer 8 LESS than low: 0
+Customer 9 LESS than low: 0
+Customer 11 LESS than low: 0
+Customer 12 LESS than low: 0
+Customer 13 LESS than low: 0
+Customer 15 LESS than low: 0
+Customer 16 LESS than low: 0
+Customer 17 LESS than low: 0
+Customer 18 LESS than low: 0
+Customer 19 LESS than low: 0
+Customer 20 LESS than low: 0
+Customer 21 LESS than low: 0
+Customer 24 LESS than low: 0
+Customer 25 LESS than low: 0
+Customer 26 LESS than low: 0
+Customer 27 LESS than low: 0
+Customer 28 LESS than low: 0
+Customer 29 LESS than low: 0
+Customer 30 LESS than low: 0
+Customer 31 LESS than low: 0
+Customer 32 LESS than low: 0
+Customer 33 LESS than low: 0
+Customer 35 LESS than low: 0
+Customer 36 LESS than low: 0
+Customer 39 LESS than low: 0
+Customer 40 LESS than low: 0
+Customer 41 LESS than low: 0
+Customer 42 LESS than low: 0
+Customer 43 LESS than low: 0
+Customer 44 LESS than low: 0
+Customer 45 LESS than low: 0
+Customer 46 LESS than low: 0
+Customer 48 LESS than low: 0
+Customer 50 LESS than low: 0
