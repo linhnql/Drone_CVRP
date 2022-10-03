@@ -295,7 +295,7 @@ void check_solution(ofstream& file_check, string solution_name)
     {
         customer[i].delivered = 0;
     }
-    string file_name = "./solution/" + solution_name + ".txt";
+    string file_name = solution_name + ".txt";
     std::ifstream file(file_name, std::ios_base::in);
     if (!file.is_open()){
         flag = 1;
@@ -313,6 +313,7 @@ void check_solution(ofstream& file_check, string solution_name)
     while (getline(file, line))
     {
         int length = line.length();
+        cout << line << endl;
         if (length > 1)  check_truck(file_check, line, cnt_truck++);
         else
         {
@@ -392,7 +393,7 @@ int main()
     //         }
     //     }
     // }
-    string test = "20.5.3";
+    string test = "6.10.4";
     read_test(test);
 
     read_param("params.csv");
