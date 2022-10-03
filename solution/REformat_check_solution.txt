@@ -1,3 +1,5 @@
+Number feasible solution: 47
+Number not feasible solution: 17
 
 6.5.1
 FEASIBLE SOLUTION
@@ -139,6 +141,3 @@ FEASIBLE SOLUTION
 
 20.20.4
 FEASIBLE SOLUTION
-
-Number feasible solution: 47
-Number not feasible solution: 17
