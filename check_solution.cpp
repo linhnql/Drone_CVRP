@@ -179,7 +179,7 @@ vector<int> get_router(string line, int &start_load, int &cnt)
 {
     std::istringstream iss(line);
     double n = 0;
-    cnt = 0;
+    int cnt = 0;
     std::vector<int> drone_trip;
 
     while (iss >> n)
