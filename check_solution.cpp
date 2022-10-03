@@ -178,7 +178,7 @@ void read_param(string file_name)
 vector<int> get_router(string line, int &start_load, int &cnt)
 {
     std::istringstream iss(line);
-    int n = 0;
+    double n = 0;
     cnt = 0;
     std::vector<int> drone_trip;
 
@@ -196,7 +196,8 @@ void check_truck(ofstream& file_check, string line, int num_truck)
 {
     std::istringstream iss(line);
     int start_load;
-    int n, cnt = 0;
+    double n;
+    int cnt = 0;
     std::vector<int> truck_trip;
 
     while (iss >> n)
@@ -213,7 +214,6 @@ void check_truck(ofstream& file_check, string line, int num_truck)
     int count_cus = start_load - 1;
     for (int j = 1; j < count_cus; ++j)
     {
-        cout << j << " " << matrix_dist[truck_trip[j - 1]][truck_trip[j]] << "\n";
         check_cus.insert(truck_trip[j]);
         distance += matrix_dist[truck_trip[j - 1]][truck_trip[j]];
     }
@@ -295,7 +295,7 @@ void check_solution(ofstream& file_check, string solution_name)
     {
         customer[i].delivered = 0;
     }
-    string file_name = solution_name + ".txt";
+    string file_name = "./solution/" + solution_name + ".txt";
     std::ifstream file(file_name, std::ios_base::in);
     if (!file.is_open()){
         flag = 1;
@@ -312,9 +312,9 @@ void check_solution(ofstream& file_check, string solution_name)
     int cnt_truck = 1, cnt_drone;
     while (getline(file, line))
     {
-        int length = line.length();
-        cout << line << endl;
-        if (length > 1)  check_truck(file_check, line, cnt_truck++);
+        // int length = line.length();
+        if (line.find("-1") != std::string::npos)
+            check_truck(file_check, line, cnt_truck++);
         else
         {
             cnt_drone = stoi(line);
@@ -329,16 +329,15 @@ void check_solution(ofstream& file_check, string solution_name)
         flag = 1, file_check << "Violates NUMBER drone: " << cnt_drone << "\n";
     // check drone
     getline(file, line);
-
     for (int i = 0; i < cnt_drone; ++i)
     {
         // cout << "Drone " << i+1 << endl;
 
         int router = 0;
         double total_dis = 0;
-        while (getline(file, line) && line.length() > 1)
+        while (getline(file, line) && line.find("-1") != std::string::npos)
         {
-            router++;
+            router++; 
             double router_dis = check_drone_router(file_check, line, i + 1, router);
             total_dis += router_dis;
         }
@@ -393,7 +392,7 @@ int main()
     //         }
     //     }
     // }
-    string test = "6.10.4";
+    string test = "6.10.1";
     read_test(test);
 
     read_param("params.csv");
